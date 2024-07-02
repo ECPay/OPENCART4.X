@@ -1,0 +1,80 @@
+<fieldset>
+    {% if status %}
+        <form id="form-ecpay-shipping" class="mt-2 d-block">
+    {% else %}
+        <form id="form-ecpay-shipping" class="mt-2 d-none">
+    {% endif %}
+        <div class="row row-cols-1">
+            <div class="col mb-3 required">
+                <label for="input-telephone" class="form-label">{{ text_telephone }}</label>
+                
+                {% if telephone_isinvalid %}
+                    <input type="text" name="telephone" value="{{ customer['telephone'] }}" placeholder="{{ text_telephone }}" id="input-telephone" class="form-control is-invalid">
+                    <div id="error-telephone" class="invalid-feedback d-block">{{ telephone_error }}</div>
+                {% else %}
+                    <input type="text" name="telephone" value="{{ customer['telephone'] }}" placeholder="{{ text_telephone }}" id="input-telephone" class="form-control">
+                    <div id="error-telephone" class="invalid-feedback d-none"></div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</fieldset>
+
+<script type="text/javascript">
+    // 取得當前運送方式
+    $(document).on('submit', '#form-shipping-method', function(e) {
+        var current_shipping_method = $('input[name=\'shipping_method\']:checked').val();
+        current_shipping_method_array = current_shipping_method.split('.');
+        // 判斷是否顯示手機號碼欄位
+        if (current_shipping_method_array[0] !== 'ecpaylogistic') {
+            $('#form-ecpay-shipping').removeClass('d-block')
+            $('#form-ecpay-shipping').addClass('d-none')
+        }
+        else {
+            $('#form-ecpay-shipping').removeClass('d-none')
+            $('#form-ecpay-shipping').addClass('d-block')
+        }
+    });
+
+    // 監聽手機號碼欄位
+    $('#input-telephone').keyup(function() {
+        let data = {
+            'key': 'telephone',
+            'value': this.value
+        };
+        changeDataAjax(data);
+    })
+
+    // 修改手機號碼欄位Ajax
+    function changeDataAjax(data) {
+        $.ajax({
+            type: 'POST',
+            url: 'index.php?route=extension/ecpay/shipping/ecpaylogistic.validate_shipping_field',
+            data: data,
+            dataType: "json",
+            success: function (response){
+                if (!response.success) {
+                    $('#input-telephone').addClass('is-invalid');
+                    $('#error-telephone').removeClass('d-none');
+                    $('#error-telephone').addClass('d-block');
+                    $('#error-telephone').text(response.message);
+                    $('#button-confirm').prop('disabled', true);
+                }
+                else {
+                    $('#input-telephone').removeClass('is-invalid');
+                    $('#error-telephone').removeClass('d-block');
+                    $('#error-telephone').addClass('d-none');
+                    $('#error-telephone').text('');
+                    $('#button-confirm').prop('disabled', false);
+                }
+            },
+            error: function (response){
+                $('#input-telephone').addClass('is-invalid');
+                $('#error-telephone').removeClass('d-none');
+                $('#error-telephone').addClass('d-block');
+                $('#error-telephone').text('Server Error');
+                $('#button-confirm').prop('disabled', true);
+            }
+        });
+    }
+</script>

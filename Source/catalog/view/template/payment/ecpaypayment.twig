@@ -1,0 +1,166 @@
+<fieldset>
+    <div class="d-inline-block pt-2 pd-2 w-100 text-end">
+        <button type="submit" id="button-confirm" class="btn btn-primary">{{ button_confirm }}</button>
+    </div>
+</fieldset>
+
+<script type="text/javascript">
+    function detectmob() {
+        if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    function get_current_invoice_field_data() {
+        return {
+            'invoice_type': $('#input-invoice-type').val(),
+            'carrier_type': $('#input-carrier-type').val(),
+            'carrier_num': $('#input-carrier-num').val(),
+            'uniform_numbers': $('#input-uniform-numbers').val(),
+            'customer_company': $('#input-customer-company').val(),
+            'love_code': $('#input-love-code').val()
+        };
+    }
+
+    function save_invoice_field() {
+        $.ajax({
+            type: 'POST',
+            url: 'index.php?route=extension/ecpay/module/ecpayinvoice.saveInvoiceField',
+            data: get_current_invoice_field_data(),
+            dataType: 'json',
+            success: function (response){
+                console.log('Success save_invoice_field');
+            },
+            error: function (response){
+                console.log('Error save_invoice_field');
+                console.log(response);
+            }
+        });
+    }
+
+    function validate_invoice_field() {
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+                type: 'POST',
+                url: 'index.php?route=extension/ecpay/module/ecpayinvoice.validateData',
+                data: get_current_invoice_field_data(),
+                dataType: 'json',
+                success: function (response){
+                    if (!response.success) {
+
+                        // 驗證失敗欄位處理
+                        $.each(response.error, function(key, message){
+                            $('#input-' + key).addClass('is-invalid');
+                            $('#error-' + key).removeClass('d-none');
+                            $('#error-' + key).addClass('d-block');
+                            $('#error-' + key).text(message);
+                        });
+
+                        $('#button-confirm').prop('disabled', true);
+
+                        resolve(0);
+                    } else {
+                        console.log('validate_invoice_field success')
+
+                        // 儲存發票資訊
+                        save_invoice_field();
+
+                        resolve(1);
+                    }
+                },
+                error: function (response){
+                    console.log('Error validate_invoice_field');
+
+                    $('#button-confirm').prop('disabled', true);
+                    reject(response);
+                }
+            });
+        });
+    }
+
+    function validate_shipping_field() {
+        $.ajax({
+            type: 'POST',
+            url: 'index.php?route=extension/ecpay/shipping/ecpaylogistic.validate_shipping_field',
+            data: {
+                'key': 'telephone',
+                'value': $('#input-telephone').val()
+            },
+            dataType: "json",
+            success: function (response){
+                if (!response.success) {
+                    $('#input-telephone').addClass('is-invalid');
+                    $('#error-telephone').removeClass('d-none');
+                    $('#error-telephone').addClass('d-block');
+                    $('#error-telephone').text(response.message);
+                    $('#button-confirm').prop('disabled', true);
+                }
+                else {
+                    var current_shipping_method = $(':hidden#input-shipping-code').val();
+
+                    device = detectmob();
+                    if (current_shipping_method != 'ecpaylogistic.tcat' && current_shipping_method != 'ecpaylogistic.post') {
+                        location.href = 'index.php?route=extension/ecpay/shipping/ecpaylogistic|express_map&device=' + device;
+                    } else {
+                        location.href = 'index.php?route=extension/ecpay/payment/ecpaypayment|redirect&device=' + device;
+                    }
+                }
+            },
+            error: function (response){
+                $('#input-telephone').addClass('is-invalid');
+                $('#error-telephone').removeClass('d-none');
+                $('#error-telephone').addClass('d-block');
+                $('#error-telephone').text('Server Error');
+                $('#button-confirm').prop('disabled', true);
+            }
+        });
+    }
+
+    function check_invoice() {
+        return new Promise(function(resolve, reject) {
+            if ($('#ecpayinvoice-fieldset') !== undefined) {
+                if ($('#ecpayinvoice-fieldset').hasClass('d-block')) {
+                        // 驗證發票欄位
+                        validate_invoice_field().then(function (result) {
+                            resolve(result);
+                        })
+                        .catch(function (response) {
+                            reject(response);
+                        });
+                } else {
+                    resolve(1);
+                }
+            } else {
+                resolve(1);
+            }
+        })
+    }
+
+    $('#button-confirm').on('click', function () {
+        check_invoice().then(function(invoice_result) {
+
+            if (invoice_result) {
+                if ($('#form-ecpay-shipping') !== undefined && $('#form-ecpay-shipping').hasClass('d-block')) {
+                    if ($('#input-telephone').hasClass('is-invalid') || $('#input-telephone').val() == '') {
+                        $('#input-telephone').addClass('is-invalid');
+                        $('#error-telephone').removeClass('d-none');
+                        $('#error-telephone').addClass('d-block');
+                        $('#error-telephone').text('No special symbols are allowed in the phone number, it must be ten digits long and start with 09');
+                    }
+                    else {
+                        validate_shipping_field();
+                    }
+                } else {
+                    device = detectmob();
+                    location.href = 'index.php?route=extension/ecpay/payment/ecpaypayment|redirect&device=' + device;
+                }
+            }
+        })
+        .catch(function(response) {
+            console.log(response)
+        })
+    });
+</script>

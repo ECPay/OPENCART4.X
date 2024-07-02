@@ -1,0 +1,306 @@
+<style>
+    .display-none {
+        display: none;
+    }
+
+    .display-block {
+        display: block;
+    }
+</style>
+
+<fieldset id="ecpayinvoice-fieldset" class="{% if status %} d-block {% else %} d-none {% endif %}">
+    <legend>{{ text_title }}</legend>
+    <!-- <div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{ text_description }}</div> -->
+    <form id="ecpayinvoice-form">
+        <div class="row">
+            <!--發票類型-->
+            <div class="col-md-6">
+                <div class="mb-3 required">
+                    <label for="input-invoice-type" class="col-form-label">{{ entry_invoice_type_title }}</label>
+                    <select id="input-invoice-type" name="invoice_type" class="form-select">
+                        <option value="1" {% if invoice_type == 1 %} selected {% endif %}>{{ entry_invoice_type_i }}</option>
+                        <option value="2" {% if invoice_type == 2 %} selected {% endif %}>{{ entry_invoice_type_c }}</option>
+                        <option value="3" {% if invoice_type == 3 %} selected {% endif %}>{{ entry_invoice_type_d }}</option>
+                    </select>
+                </div>
+            </div>
+            <!--載具類型-->
+            <div class="col-md-6 {% if invoice_type == 1 or invoice_type == 2 %} display-block {% else %} display-none {% endif %}" id="carrier-type-field">
+                <div class="mb-3 required">
+                    <label for="input-carrier-type" class="col-form-label">{{ entry_invoice_carrier_type_title }}</label>
+                    <select id="input-carrier-type" name="carrier_type" class="form-select">
+                        <option value="1" {% if carrier_type == 1 %} selected {% endif %}>{{ entry_invoice_carrier_type_p }}</option>
+                        <option value="2" {% if carrier_type == 2 %} selected {% endif %}>{{ entry_invoice_carrier_type_c }}</option>
+                        <option class="{% if invoice_type == 1 %} display-block {% else %} display-none {% endif %}" value="3" {% if carrier_type == 3 %} selected {% endif %}>{{ entry_invoice_carrier_type_n }}</option>
+                        <option value="4" {% if carrier_type == 4 %} selected {% endif %}>{{ entry_invoice_carrier_type_m }}</option>
+                    </select>
+                </div>
+            </div>
+            <!--統一編號-->
+            <div class="col-md-6 {% if invoice_type == 2 %} display-block {% else %} display-none {% endif %}" id="uniform-numbers-field">
+                <div class="mb-3 required">
+                    <label for="input-uniform-numbers" class="col-form-label">{{ entry_invoice_uniform_numbers }}</label>
+                    {% if validate_uniform_numbers %}
+                        <input type="text" name="uniform_numbers" value="{{ uniform_numbers }}" placeholder="Uniform Numbers" id="input-uniform-numbers" class="form-control is-invalid" />
+                        <div id="error-uniform-numbers" class="invalid-feedback d-block">{{ validate_uniform_numbers.uniform_numbers }}</div>
+                    {% else %}
+                        <input type="text" name="uniform_numbers" value="{{ uniform_numbers }}" placeholder="Uniform Numbers" id="input-uniform-numbers" class="form-control" />
+                        <div id="error-uniform-numbers" class="invalid-feedback" d-none></div>
+                    {% endif %}
+                </div>
+            </div>
+            <!--公司行號-->
+            <div class="col-md-6 {% if invoice_type == 2 %} display-block {% else %} display-none {% endif %}" id="customer-company-field">
+                <div class="mb-3">
+                    <label for="input-customer-company" class="col-form-label">{{ entry_invoice_customer_company }}</label>
+                    {% if validate_customer_company %}
+                        <input type="text" name="customer_company" value="{{ customer_company }}" placeholder="Company" id="input-customer-company" class="form-control is-invalid" />
+                        <div id="error-customer-company" class="invalid-feedback d-block">{{ validate_customer_company.customer_company }}</div>
+                    {% else %}
+                        <input type="text" name="customer_company" value="{{ customer_company }}" placeholder="Company" id="input-customer-company" class="form-control" />
+                        <div id="error-customer-company" class="invalid-feedback" d-none></div>
+                    {% endif %}
+                </div>
+            </div>
+            <!--捐贈碼-->
+            <div class="col-md-6 {% if invoice_type == 3 %} display-block {% else %} display-none {% endif %}" id="love-code-field">
+                <div class="mb-3 required">
+                    <label for="input-love-code" class="col-form-label">{{ entry_invoice_donation_code }}</label>
+                    {% if validate_love_code %}
+                        <input type="text" name="love_code" value="{{ love_code }}" placeholder="Donation Code" id="input-love-code" class="form-control is-invalid" />
+                        <div id="error-love-code" class="invalid-feedback" d-block>{{ validate_love_code.love_code }}</div>
+                    {% else %}
+                        <input type="text" name="love_code" value="{{ love_code }}" placeholder="Donation Code" id="input-love-code" class="form-control" />
+                        <div id="error-love-code" class="invalid-feedback" d-none></div>
+                    {% endif %}
+                </div>
+            </div>
+            <!--載具編號-->
+            <div class="col-md-6 {% if (invoice_type == 1 or invoice_type == 2) and (carrier_type == 3 or carrier_type == 4) %} display-block {% else %} display-none {% endif %}" id="carrier-num-field">
+                <div class="mb-3 required">
+                    <label for="input-carrier-num" class="col-form-label">{{ entry_invoice_carrier_num }}</label>
+                    {% if validate_carrier_num %}
+                        <input type="text" name="carrier_num" value="{{ carrier_num }}" placeholder="Carrier Code" id="input-carrier-num" class="form-control is-invalid" />
+                        <div id="error-carrier-num" class="invalid-feedback d-block">{{ validate_carrier_num.carrier_num }}</div>
+                    {% else %}
+                        <input type="text" name="carrier_num" value="{{ carrier_num }}" placeholder="Carrier Code" id="input-carrier-num" class="form-control" />
+                        <div id="error-carrier-num" class="invalid-feedback d-none"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="text-end">
+            <button type="submit" id="button-confirm" class="btn btn-primary">{{ button_confirm }}</button>
+        </div> -->
+    </form>
+</fieldset>
+
+<script type="text/javascript">
+
+// 監聽運送方式
+$(document).on('submit', '#form-shipping-method', function(e) {
+    // 還原欄位顯示
+    refreshField();
+    $('#input-invoice-type').val('1');
+    $('#input-carrier-type').val('1');
+
+    $('#ecpayinvoice-fieldset').removeClass('d-block')
+    $('#ecpayinvoice-fieldset').addClass('d-none')
+});
+
+// 監聽付款方式
+$(document).on('submit', '#form-payment-method', function(e) {
+    var current_payment_method = $('input[name=\'payment_method\']:checked').val();
+    current_payment_method_array = current_payment_method.split('.');
+
+    // 還原欄位顯示
+    refreshField();
+    $('#input-invoice-type').val('1');
+    $('#input-carrier-type').val('1');
+
+    // 判斷是否顯示綠界發票
+    if (current_payment_method_array[0] !== 'ecpaypayment') {
+        $('#ecpayinvoice-fieldset').removeClass('d-block')
+        $('#ecpayinvoice-fieldset').addClass('d-none')
+    } else {
+        $('#ecpayinvoice-fieldset').removeClass('d-none')
+        $('#ecpayinvoice-fieldset').addClass('d-block')
+    }
+});
+
+// 監聽發票類型
+$('#input-invoice-type').on('change', function() {
+    // 還原欄位顯示
+    refreshField();
+
+    // 調整顯示欄位
+    switch (this.value) {
+        case '2':
+            // 公司發票
+            displayField('carrier-type-field', 'block')
+            displayField('uniform-numbers-field', 'block')
+            displayField('customer-company-field', 'block')
+
+            // 載具類型
+            $.each($('#input-carrier-type option'), function(i, el) {
+                if ($(el).val() == '3') $(el).hide();
+                else $(el).show();
+            });
+            $('#input-carrier-type').val('1');
+            break;
+        case '3':
+            // 捐贈發票
+            displayField('carrier-type-field', 'none')
+            displayField('love-code-field', 'block')
+            break;
+        default:
+            // 個人發票
+            displayField('carrier-type-field', 'block')
+
+            // 載具類型
+            $.each($('#input-carrier-type option'), function(i, el) {
+                $(el).show();
+            });
+            $('#input-carrier-type').val('1');
+            break;
+    }
+
+    let data = {
+        'key': 'invoice_type',
+        'value': this.value
+    };
+    changeAjax(data);
+})
+
+// 監聽載具類型
+$('#input-carrier-type').on('change', function() {
+    var invoice_type = $('#input-invoice-type').val();
+
+    // 還原欄位顯示
+    refreshField();
+
+    // 調整顯示欄位
+    if ((invoice_type == '1' || invoice_type == '2') && this.value !== '1' && this.value !== '2') {
+        displayField('carrier-num-field', 'block')
+    } else {
+        displayField('carrier-num-field', 'none')
+    }
+    if (invoice_type == '2') {
+        displayField('uniform-numbers-field', 'block')
+        displayField('customer-company-field', 'block')
+    }
+
+    let data = {
+        'key': 'carrier_type',
+        'value': this.value
+    };
+    changeAjax(data);
+})
+
+// 統一編號
+$('#input-uniform-numbers').keyup(function() {
+    let data = {
+        'key': 'uniform_numbers',
+        'value': this.value
+    };
+    changeAjax(data);
+})
+
+// 公司行號
+$('#input-customer-company').keyup(function() {
+    let data = {
+        'key': 'customer_company',
+        'value': this.value
+    };
+    changeAjax(data);
+})
+
+// 捐贈碼
+$('#input-love-code').keyup(function() {
+    let data = {
+        'key': 'love_code',
+        'value': this.value
+    };
+    changeAjax(data);
+})
+
+// 載具編號
+$('#input-carrier-num').keyup(function() {
+    let data = {
+        'key': 'carrier_num',
+        'value': this.value
+    };
+    changeAjax(data);
+})
+
+function displayField(id, type) {
+    if (type == 'block') {
+        $('#' + id).removeClass('display-none')
+        $('#' + id).addClass('display-block')
+    }
+    else {
+        $('#' + id).removeClass('display-block')
+        $('#' + id).addClass('display-none')
+        $('#' + id).val('')
+    }
+}
+
+function refreshField() {
+    $('#input-uniform-numbers').val('');
+    $('#input-customer-company').val('');
+    $('#input-love-code').val('');
+    $('#input-carrier-num').val('');
+
+    displayField('carrier-type-field', 'block')
+    displayField('uniform-numbers-field', 'none')
+    displayField('customer-company-field', 'none')
+    displayField('love-code-field', 'none')
+    displayField('carrier-num-field', 'none')
+
+    defaultFieldStyle('uniform-numbers')
+    defaultFieldStyle('customer-company')
+    defaultFieldStyle('love-code')
+    defaultFieldStyle('carrier-num')
+}
+
+function changeAjax(data) {
+    $.ajax({
+        type: 'POST',
+        url: 'index.php?route=extension/ecpay/module/ecpayinvoice.changeData',
+        data: data,
+        dataType: "json",
+        success: function (response){
+
+            input_id = data.key.replace('_', '-')
+
+            if (!response.success) {
+                errorFieldStyle(input_id, response.error[data.key])
+            } else {
+                defaultFieldStyle(input_id)
+            }
+        },
+        error: function (response){
+            console.log(response);
+        }
+    });
+}
+
+// 發票欄位驗證預設樣式
+function defaultFieldStyle(id) {
+    $('#input-' + id).removeClass('is-invalid');
+    $('#error-' + id).removeClass('d-block');
+    $('#error-' + id).addClass('d-none');
+    $('#error-' + id).text('');
+    $('#button-confirm').prop('disabled', false);
+}
+
+// 發票欄位驗證失敗樣式
+function errorFieldStyle(id, message) {
+    $('#input-' + id).addClass('is-invalid');
+    $('#error-' + id).removeClass('d-none');
+    $('#error-' + id).addClass('d-block');
+    $('#error-' + id).text(message);
+    $('#button-confirm').prop('disabled', true);
+}
+</script>

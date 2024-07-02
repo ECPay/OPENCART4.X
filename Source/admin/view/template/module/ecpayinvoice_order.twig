@@ -1,0 +1,31 @@
+<br><br>
+<strong>ECPay Invoice</strong>
+<div id="ecpayinvoice-order-info">
+    <span>發票開立：{{ invoice_type_name }}</span><br>
+
+    {% if invoice_type == 1 or invoice_type == 2 %}
+        <span>開立類型：{{ carrier_type_name }}</span><br>
+    {% endif %}
+
+    {% if invoice_type == 2 %}
+        <span>統一編號：{{ company_write }}</span><br>
+        <span>公司行號：{{ customer_company }}</span><br>
+    {% endif %}
+
+    {% if (invoice_type == 1 or invoice_type == 2)and (carrier_type == 3 or carrier_type == 4) %}
+        <span>載具編號：{{ carrier_num }}</span><br>
+    {% endif %}
+
+    {% if invoice_type == 3 %}
+        <span>捐贈碼：{{ love_code }}</span><br>
+    {% endif %}
+
+    <span>開立狀態：{% if invoice_process == 1 %}已開立{% else %}尚未開立{% endif %}</span><br>
+</div>
+
+<script type="text/javascript">
+    $(document).on('submit', '#button-invoice', function(e) {
+
+        $('#invoice-value').text('');
+    });
+</script>

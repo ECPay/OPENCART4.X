@@ -1,0 +1,631 @@
+{{ header}}{{ column_left}}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="float-end">
+                <button type="submit" form="form-ecpaylogistic" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary">
+                    <i class="fa fa-save"></i>
+                </button>
+                <a href="{{ cancel }}" data-bs-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-light">
+                    <i class="fa fa-reply"></i>
+                </a>
+            </div>
+
+            <h1>{{ heading_title }}</h1>
+
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {% if error_warning %}
+        <div class="alert alert-danger">
+            <i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endif %}
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-pencil"></i> 
+                {{ text_edit }}
+            </div>
+
+            <div class="card-body">
+                <form action="{{ action }}" method="post" data-oc-toggle="ajax" id="form-ecpaylogistic">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <!--新的-->
+                            <p>
+                                <!--一般設定-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-general" aria-expanded="true" aria-controls="tab-general">{{ text_general }}</button>
+                                <!--統一超商取貨-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-unimart" aria-expanded="false" aria-controls="tab-unimart">{{ text_unimart }}</button>
+                                <!--統一超商取貨付款-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-unimart-collection" aria-expanded="false" aria-controls="tab-unimart-collection">{{ text_unimart_collection }}</button>
+                                <!--全家超商取貨-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-fami" aria-expanded="false" aria-controls="tab-fami">{{ text_fami }}</button>
+                                <!--全家超商取貨付款-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-fami-collection" aria-expanded="false" aria-controls="tab-fami-collection">{{ text_fami_collection }}</button>
+                                <!--萊爾富超商取貨-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-hilife" aria-expanded="false" aria-controls="tab-hilife">{{ text_hilife }}</button>
+                                <!--萊爾富超商取貨付款-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-hilife-collection" aria-expanded="false" aria-controls="tab-hilife-collection">{{ text_hilife_collection }}</button>
+                                <!--OK超商取貨-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-okmart" aria-expanded="false" aria-controls="tab-okmart">{{ text_okmart }}</button>
+                                <!--OK超商取貨付款-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-okmart-collection" aria-expanded="false" aria-controls="tab-okmart-collection">{{ text_okmart_collection }}</button>
+                                <!--中華郵政-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-post" aria-expanded="false" aria-controls="tab-post">{{ text_post }}</button>
+                                <!--黑貓物流-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-tcat" aria-expanded="false" aria-controls="tab-tcat">{{ text_tcat }}</button>
+                            </p>
+                        </div>
+                        <div id="content-group" class="col-sm-10">
+                            <!--一般設定-->
+                            <div class="row">
+                                <div class="collapse multi-collapse show" data-bs-parent="#content-group" id="tab-general">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-shipping-ecpaylogistic-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--MID-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-mid">
+                                            <span data-toggle="tooltip" title="{{ entry_mid }}">
+                                                {{ entry_mid }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_mid" value="{{ shipping_ecpaylogistic_mid }}" placeholder="{{ entry_mid }}" id="input-shipping-ecpaylogistic-mid" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-mid" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Hash Key-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-hashkey">
+                                            <span data-toggle="tooltip" title="{{ entry_hashkey }}">
+                                                {{ entry_hashkey }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_hashkey" value="{{ shipping_ecpaylogistic_hashkey }}" placeholder="{{ entry_hashkey }}" id="input-shipping-ecpaylogistic-hashkey" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-hashkey" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Hash Iv-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-hashiv">
+                                            <span data-toggle="tooltip" title="{{ entry_hashiv }}">
+                                                {{ entry_hashiv }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_hashiv" value="{{ shipping_ecpaylogistic_hashiv }}" placeholder="{{ entry_hashiv }}" id="input-shipping-ecpaylogistic-hashiv" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-hashiv" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--logistic Types-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-hashiv">
+                                            <span data-toggle="tooltip" title="{{ entry_hashiv }}">
+                                                {{ entry_hashiv }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select name="shipping_ecpaylogistic_type" id="input-ecpaylogistic-type" class="form-control">
+                                                {% for ecpayl_type in shipping_ecpaylogistic_types %}
+                                                    {% if ecpayl_type.value == shipping_ecpaylogistic_type %}
+                                                        <option value="{{ ecpayl_type.value }}" selected="selected">{{ ecpayl_type.text }}</option>
+                                                    {% else %}
+                                                        <option value="{{ ecpayl_type.value }}">{{ ecpayl_type.text }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <div id="error-ecpaylogistic-type" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Sender Name-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-sender-name">
+                                            <span data-toggle="tooltip" title="{{ entry_sender_name }}">
+                                                {{ entry_sender_name }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_sender_name" value="{{ shipping_ecpaylogistic_sender_name }}" placeholder="{{ entry_sender_name }}" id="input-shipping-ecpaylogistic-sender-name" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-sender-name" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Sender Cellphone-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-sender-cellphone">
+                                            <span data-toggle="tooltip" title="{{ entry_sender_cellphone }}">
+                                                {{ entry_sender_cellphone }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_sender_cellphone" value="{{ shipping_ecpaylogistic_sender_cellphone }}" placeholder="{{ entry_sender_cellphone }}" id="input-shipping-ecpaylogistic-sender-cellphone" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-sender-cellphone" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Sender Zipcode-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-sender-zipcode">
+                                            <span data-toggle="tooltip" title="{{ entry_sender_zipcode }}">
+                                                {{ entry_sender_zipcode }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_sender_zipcode" value="{{ shipping_ecpaylogistic_sender_zipcode }}" placeholder="{{ entry_sender_zipcode }}" id="input-shipping-ecpaylogistic-sender-zipcode" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-sender-zipcode" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Sender Address-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-sender-address">
+                                            <span data-toggle="tooltip" title="{{ entry_sender_address }}">
+                                                {{ entry_sender_address }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_sender_address" value="{{ shipping_ecpaylogistic_sender_address }}" placeholder="{{ entry_sender_address }}" id="input-shipping-ecpaylogistic-sender-address" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-sender-address" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Free Shipping Amount-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-free-shipping-amount">
+                                            <span data-toggle="tooltip" title="{{ entry_FreeShippingAmount }}">
+                                                {{ entry_FreeShippingAmount }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_free_shipping_amount" value="{{ shipping_ecpaylogistic_free_shipping_amount }}" placeholder="{{ entry_FreeShippingAmount }}" id="input-shipping-ecpaylogistic-free-shipping-amount" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-free-shipping-amount" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Min Amount-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-min-amount">
+                                            <span data-toggle="tooltip" title="{{ entry_MinAmount }}">
+                                                {{ entry_MinAmount }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_min_amount" value="{{ shipping_ecpaylogistic_min_amount }}" placeholder="{{ entry_MinAmount }}" id="input-shipping-ecpaylogistic-min-amount" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-min-amount" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Max Amount-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-max-amount">
+                                            <span data-toggle="tooltip" title="{{ entry_MaxAmount }}">
+                                                {{ entry_MaxAmount }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_max_amount" value="{{ shipping_ecpaylogistic_max_amount }}" placeholder="{{ entry_MaxAmount }}" id="input-shipping-ecpaylogistic-max-amount" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-max-amount" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Geo Zone-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-geo-zone-id">
+                                            <span data-toggle="tooltip" title="{{ entry_geo_zone }}">
+                                                {{ entry_geo_zone }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select name="shipping_ecpaylogistic_geo_zone_id" id="input-geo-zone" class="form-control">
+                                                <option value="0">{{ text_all_zones }}</option>
+                                                {% for geo_zone in geo_zones %}
+                                                {% if geo_zone.geo_zone_id == shipping_ecpaylogistic_geo_zone_id %}
+                                                <option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
+                                                {% else %}
+                                                <option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <div id="error-shipping-ecpaylogistic-geo-zone-id" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Order Status-->   
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-order-status">
+                                            <span data-toggle="tooltip" title="{{ entry_order_status }}">
+                                                {{ entry_order_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select name="shipping_ecpaylogistic_order_status" class="form-control">
+                                                {% for order_status in order_statuses %}
+                                                {% if order_status.order_status_id == shipping_ecpaylogistic_order_status %}
+                                                <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                                                {% else %}
+                                                <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <div id="error-shipping-ecpaylogistic-order-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--統一超商取貨-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-unimart">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-unimart-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_unimart_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_unimart_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_unimart_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-unimart-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-unimart-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_UNIMART_fee }}">
+                                                {{ entry_UNIMART_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_unimart_fee" value="{{ shipping_ecpaylogistic_unimart_fee }}" placeholder="{{ entry_UNIMART_fee }}" id="input-shipping-ecpaylogistic-unimart-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-unimart-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--統一超商取貨付款-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-unimart-collection">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-unimart-collection-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_unimart_collection_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_unimart_collection_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_unimart_collection_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-unimart-collection-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-unimart-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_UNIMART_Collection_fee }}">
+                                                {{ entry_UNIMART_Collection_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_unimart_collection_fee" value="{{ shipping_ecpaylogistic_unimart_collection_fee }}" placeholder="{{ entry_UNIMART_Collection_fee }}" id="input-shipping-ecpaylogistic-unimart-collection-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-unimart-collection-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--全家超商取貨-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-fami">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-fami-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_fami_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_fami_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_fami_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-fami-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-fami-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_FAMI_fee }}">
+                                                {{ entry_FAMI_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_fami_fee" value="{{ shipping_ecpaylogistic_fami_fee }}" placeholder="{{ entry_FAMI_fee }}" id="input-shipping-ecpaylogistic-fami-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-fami-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--全家超商取貨付款-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-fami-collection">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-fami-collection-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_fami_collection_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_fami_collection_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_fami_collection_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-fami-collection-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-fami-collection-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_FAMI_Collection_fee }}">
+                                                {{ entry_FAMI_Collection_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_fami_collection_fee" value="{{ shipping_ecpaylogistic_fami_collection_fee }}" placeholder="{{ entry_FAMI_Collection_fee }}" id="input-shipping-ecpaylogistic-fami-collection-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-fami-collection-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--萊爾富超商取貨-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-hilife">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-hilife-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_hilife_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_hilife_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_hilife_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-hilife-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-hilife-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_HILIFE_fee }}">
+                                                {{ entry_HILIFE_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_hilife_fee" value="{{ shipping_ecpaylogistic_hilife_fee }}" placeholder="{{ entry_HILIFE_fee }}" id="input-shipping-ecpaylogistic-hilife-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-hilife-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--萊爾富超商取貨付款-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-hilife-collection">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-hilife-collection-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_hilife_collection_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_hilife_collection_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_hilife_collection_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-hilife-collection-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-hilife-collection-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_HILIFE_Collection_fee }}">
+                                                {{ entry_HILIFE_Collection_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_hilife_collection_fee" value="{{ shipping_ecpaylogistic_hilife_collection_fee }}" placeholder="{{ entry_HILIFE_Collection_fee }}" id="input-shipping-ecpaylogistic-hilife-collection-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-hilife-collection-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--OK超商取貨-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-okmart">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-okmart-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_okmart_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_okmart_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_okmart_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-okmart-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-okmart-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_OKMART_fee }}">
+                                                {{ entry_OKMART_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_okmart_fee" value="{{ shipping_ecpaylogistic_okmart_fee }}" placeholder="{{ entry_OKMART_fee }}" id="input-shipping-ecpaylogistic-okmart-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-okmart-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--OK超商取貨付款-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-okmart-collection">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-okmart-collection-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_okmart_collection_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_okmart_collection_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_okmart_collection_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-okmart-collection-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-okmart-collection-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_OKMART_Collection_fee }}">
+                                                {{ entry_OKMART_Collection_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_okmart_collection_fee" value="{{ shipping_ecpaylogistic_okmart_collection_fee }}" placeholder="{{ entry_OKMART_Collection_fee }}" id="input-shipping-ecpaylogistic-okmart-collection-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-okmart-collection-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--中華郵政-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-post">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-post-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_post_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_post_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_post_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-post-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee 1-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-post-1-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_POST_1_fee }}">
+                                                {{ entry_POST_1_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_post_1_fee" value="{{ shipping_ecpaylogistic_post_1_fee }}" placeholder="{{ entry_POST_1_fee }}" id="input-shipping-ecpaylogistic-post-1-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-post-1-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee 2-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-post-2-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_POST_2_fee }}">
+                                                {{ entry_POST_2_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_post_2_fee" value="{{ shipping_ecpaylogistic_post_2_fee }}" placeholder="{{ entry_POST_2_fee }}" id="input-shipping-ecpaylogistic-post-2-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-post-2-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee 3-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-post-3-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_POST_3_fee }}">
+                                                {{ entry_POST_3_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_post_3_fee" value="{{ shipping_ecpaylogistic_post_3_fee }}" placeholder="{{ entry_POST_3_fee }}" id="input-shipping-ecpaylogistic-post-3-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-post-3-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee 4-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-post-4-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_POST_4_fee }}">
+                                                {{ entry_POST_4_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_post_4_fee" value="{{ shipping_ecpaylogistic_post_4_fee }}" placeholder="{{ entry_POST_4_fee }}" id="input-shipping-ecpaylogistic-post-4-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-post-4-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--黑貓宅配-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-tcat">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-tcat-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_tcat_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_tcat_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_tcat_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-tcat-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-tcat-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_TCAT_fee }}">
+                                                {{ entry_TCAT_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_tcat_fee" value="{{ shipping_ecpaylogistic_tcat_fee }}" placeholder="{{ entry_TCAT_fee }}" id="input-shipping-ecpaylogistic-tcat-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-tcat-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{ footer }}
