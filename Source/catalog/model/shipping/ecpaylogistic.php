@@ -45,13 +45,14 @@ class EcpayLogistic extends \Opencart\System\Engine\Model {
 			$status = false;
 		}
 
-		$sFieldName = 'code';
+		$ecpaylogisticSetting = array();
+		$sFieldName  = 'code';
 		$sFieldValue = 'shipping_' . $this->module_name;
 		$get_ecpaylogistic_setting_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `" . $sFieldName . "` = '" . $sFieldValue . "'");
-		$ecpaylogisticSetting=array();
-		foreach($get_ecpaylogistic_setting_query->rows as $value){
-			$ecpaylogisticSetting[$value["key"]]=$value["value"];
+		foreach ($get_ecpaylogistic_setting_query->rows as $value) {
+			$ecpaylogisticSetting[$value["key"]] = $value["value"];
 		}
+
 		// 訂單金額範圍
 		if ($this->cart->getSubTotal() < $ecpaylogisticSetting[$this->setting_prefix . 'min_amount'] || $this->cart->getSubTotal() > $ecpaylogisticSetting[$this->setting_prefix . 'max_amount']) {
 			$status = false;

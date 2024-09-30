@@ -77,6 +77,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Model {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "mid' , `value` = '2000933';");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "hashkey' , `value` = 'XBERn1YOvpM9nfZc';");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "hashiv' , `value` = 'h1ONHk4P4yqbl5LK';");
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "test_mode' , `value` = '1';");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "type' , `value` = 'C2C';");
 
 		$this->db->query("UPDATE `" . DB_PREFIX . "setting` SET `value` = 'None', `serialized` = '0'  WHERE `code` = 'config' AND `key` = 'config_session_samesite' AND `store_id` = '0'");

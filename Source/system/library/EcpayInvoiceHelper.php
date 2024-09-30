@@ -7,7 +7,10 @@ use Opencart\System\Library\ModuleHelper;
 
 class EcpayInvoiceHelper extends ModuleHelper
 {
-	/**
+    private $module_name = 'ecpayinvoice';
+    private $setting_prefix;
+	
+    /**
      * 發票開立方式代碼-個人
      */
     const INVOICE_TYPE_PERSONAL = 1;
@@ -71,6 +74,7 @@ class EcpayInvoiceHelper extends ModuleHelper
     public function __construct()
     {
         parent::__construct();
+        $this->setting_prefix = 'module_' . $this->module_name . '_';
     }
 
     /**
@@ -80,13 +84,17 @@ class EcpayInvoiceHelper extends ModuleHelper
      * @param  string $merchant_id
      * @return array  $api_info
      */
-    public function get_ecpay_invoice_api_info($action = '', $merchant_id = '') {
+    public function get_ecpay_invoice_api_info($action = '', $test_mode = false) {
 		$api_info = [
 			'action' => '',
 		];
 
         // API URL
-		if ($this->isTestMode($merchant_id)) {
+		if ($test_mode) {
+            $api_info['merchantId'] = '2000132';
+            $api_info['hashKey'] = 'ejCk326UnaZWKisg';
+            $api_info['hashIv'] = 'q9jcZX8Ib9LM8wYk';
+
 			switch ($action) {
 				case 'check_Love_code':
 					$api_info['action'] = 'https://einvoice-stage.ecpay.com.tw/B2CInvoice/CheckLoveCode';
@@ -110,6 +118,10 @@ class EcpayInvoiceHelper extends ModuleHelper
 					break;
 			}
 		} else {
+            $api_info['merchantId'] = $this->config->get($this->setting_prefix . 'merchant_id');
+            $api_info['hashKey'] = $this->config->get($this->setting_prefix . 'hash_key');
+            $api_info['hashIv'] = $this->config->get($this->setting_prefix . 'hash_iv');
+
 			switch ($action) {
 				case 'check_Love_code':
 					$api_info['action'] = 'https://einvoice.ecpay.com.tw/B2CInvoice/CheckLoveCode';

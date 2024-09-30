@@ -77,11 +77,20 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
             'text_cod',
             'text_bnpl',
             'text_twqr',
+            'text_applepay',
+            'text_unionpay',
+
+            'text_dca',
+            'entry_dca_period_type',
+            'entry_dca_frequency',
+            'entry_dca_exec_times',
 
             'entry_status',
             'entry_merchant_id',
             'entry_hash_key',
             'entry_hash_iv',
+            'entry_test_mode',
+            'entry_test_mode_info',
             'entry_payment_methods',
             'entry_create_status',
             'entry_success_status',
@@ -158,12 +167,17 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
             'merchant_id',
             'hash_key',
             'hash_iv',
+            'test_mode',
             'payment_methods',
+            'dca_period_type',
             'create_status',
             'success_status',
             'failed_status',
             'geo_zone_id',
-            'sort_order'
+            'sort_order',
+            'dca_period_type',
+            'dca_frequency',
+            'dca_exec_times',
         );
         foreach ($options as $name) {
             $option_name = $this->setting_prefix . $name;
@@ -187,6 +201,9 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
                 'text' => $this->language->get($this->lang_prefix . 'text_disabled')
             )
         );
+
+        // DCA options
+        $data['dca_period_types'] = ['Y', 'M', 'D'];
 
         // Get the order statuses
         $this->load->model('localisation/order_status');
@@ -250,6 +267,38 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
                 $this->error[$this->id_prefix . '-' . $name] = $this->language->get($this->lang_prefix . 'error_' . $name);
             }
             unset($field_name);
+        }
+
+        // 定期定額欄位驗證
+        $dca_frequency = $this->request->post[$this->setting_prefix . 'dca_frequency'];
+        $dca_exec_times = $this->request->post[$this->setting_prefix . 'dca_exec_times'];
+        if ($dca_frequency != '' && $dca_exec_times != '') {
+            switch ($this->request->post[$this->setting_prefix . 'dca_period_type']) {
+                case 'Y':
+                    if ($dca_frequency != '1') {
+                        $this->error[$this->id_prefix . '-dca-frequency'] = $this->language->get($this->lang_prefix . 'error_dca_frequency_y');
+                    }
+                    if ($dca_exec_times < 2 || $dca_exec_times > 9) {
+                        $this->error[$this->id_prefix . '-dca-exec-times'] = $this->language->get($this->lang_prefix . 'error_dca_exec_times_y');
+                    }
+                    break;
+                case 'M':
+                    if ($dca_frequency < 1 || $dca_frequency > 12) {
+                        $this->error[$this->id_prefix . '-dca-frequency'] = $this->language->get($this->lang_prefix . 'error_dca_frequency_m');
+                    }
+                    if ($dca_exec_times < 2 || $dca_exec_times > 99) {
+                        $this->error[$this->id_prefix . '-dca-exec-times'] = $this->language->get($this->lang_prefix . 'error_dca_exec_times_m');
+                    }
+                    break;
+                case 'D':
+                    if ($dca_frequency < 1 || $dca_frequency > 365) {
+                        $this->error[$this->id_prefix . '-dca-frequency'] = $this->language->get($this->lang_prefix . 'error_dca_frequency_d');
+                    }
+                    if ($dca_exec_times < 2 || $dca_exec_times > 999) {
+                        $this->error[$this->id_prefix . '-dca-exec-times'] = $this->language->get($this->lang_prefix . 'error_dca_exec_times_d');
+                    }
+                    break;
+            }
         }
 
         return !$this->error;

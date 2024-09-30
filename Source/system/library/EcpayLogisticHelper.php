@@ -7,6 +7,7 @@ use Opencart\System\Library\ModuleHelper;
 class EcpayLogisticHelper extends ModuleHelper
 {
 	private $prefix = 'shipping_ecpaylogistic_';
+    private $ecpay_logistic_module_name = 'ecpaylogistic';
 
     /**
      * EcpayLogisticHelper constructor.
@@ -14,7 +15,6 @@ class EcpayLogisticHelper extends ModuleHelper
     public function __construct()
     {
         parent::__construct();
-
     }
 
     public function get_logistics_type($shipping_sub_type) {
@@ -75,7 +75,18 @@ class EcpayLogisticHelper extends ModuleHelper
         ];
 
         // URL位置判斷
-        if ($ecpaylogisticSetting[$this->prefix . 'mid'] == '2000933' || $ecpaylogisticSetting[$this->prefix . 'mid'] == '2000132') {
+        if ($ecpaylogisticSetting[$this->prefix . 'test_mode']) {
+            if ($ecpaylogisticSetting[$this->prefix . 'type'] == 'B2C') {
+                $api_info['merchantId'] = '2000132';
+                $api_info['hashKey'] = '5294y06JbISpM5x9';
+                $api_info['hashIv'] = 'v77hoKGq4kWxNNIS';
+            }
+            else {
+                $api_info['merchantId'] = '2000933';
+                $api_info['hashKey'] = 'XBERn1YOvpM9nfZc';
+                $api_info['hashIv'] = 'h1ONHk4P4yqbl5LK';
+            }
+
             switch ($action) {
                 case 'map':
                     $api_info['action'] = 'https://logistics-stage.ecpay.com.tw/Express/map';
@@ -127,6 +138,10 @@ class EcpayLogisticHelper extends ModuleHelper
             }
         }
         else {
+            $api_info['merchantId'] = $ecpaylogisticSetting[$this->prefix . 'mid'];
+            $api_info['hashKey'] = $ecpaylogisticSetting[$this->prefix . 'hashkey'];
+            $api_info['hashIv'] = $ecpaylogisticSetting[$this->prefix . 'hashiv'];
+
             switch ($action) {
                 case 'map':
                     $api_info['action'] = 'https://logistics.ecpay.com.tw/Express/map';

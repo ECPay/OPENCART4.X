@@ -156,15 +156,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
 
     // 電子地圖選擇門市
     public function express_map() {
-        $ecpaylogisticSetting = array();
-
-        $sFieldName                      = 'code';
-        $sFieldValue                     = 'shipping_' . $this->ecpay_logistic_module_name;
-        $get_ecpaylogistic_setting_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `" . $sFieldName . "` = '" . $sFieldValue . "'");
-
-        foreach ($get_ecpaylogistic_setting_query->rows as $value) {
-            $ecpaylogisticSetting[$value["key"]] = $value["value"];
-        }
+        $ecpaylogisticSetting = $this->get_logistic_settings();
 
         if ($ecpaylogisticSetting[$this->prefix . 'type'] == 'C2C') {
             $shippingMethod = [
@@ -210,14 +202,14 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
 
         try {
             $factory = new Factory([
-                'hashKey'    => $ecpaylogisticSetting[$this->prefix . 'hashkey'],
-                'hashIv'     => $ecpaylogisticSetting[$this->prefix . 'hashiv'],
+                'hashKey'    => $apiLogisticInfo['hashKey'],
+                'hashIv'     => $apiLogisticInfo['hashIv'],
                 'hashMethod' => 'md5',
             ]);
             $autoSubmitFormService = $factory->create('AutoSubmitFormWithCmvService');
 
             $inputMap = array(
-                'MerchantID'       => $ecpaylogisticSetting[$this->prefix . 'mid'],
+                'MerchantID'       => $apiLogisticInfo['merchantId'],
                 'MerchantTradeNo'  => $this->helper->getMerchantTradeNo($this->session->data['order_id']),
                 'LogisticsType'    => $this->helper->get_logistics_type($al_subtype),
                 'LogisticsSubType' => $al_subtype,
@@ -236,9 +228,12 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
 
     // 電子地圖選擇門市回傳
     public function response_map_admin() {
+        $ecpaylogisticSetting = $this->get_logistic_settings();
+        $apiLogisticInfo = $this->helper->get_ecpay_logistic_api_info('', '', $ecpaylogisticSetting);
+
         $factory = new Factory([
-            'hashKey' => $this->config->get($this->prefix . 'hashkey'),
-            'hashIv'  => $this->config->get($this->prefix . 'hashiv'),
+            'hashKey' => $apiLogisticInfo['hashKey'],
+            'hashIv'  => $apiLogisticInfo['hashIv'],
         ]);
         $aes_service = $factory->create(AesService::class);
 
@@ -350,19 +345,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
 
     // Server端物流回傳網址
     public function logistics_c2c_reply() {
-        $get_ecpaylogistic_setting_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `code` = 'ecpaylogistic'");
-        $ecpaylogisticSetting            = array();
-        foreach ($get_ecpaylogistic_setting_query->rows as $value) {
-            $ecpaylogisticSetting[$value["key"]] = $value["value"];
-        }
         try {
-            $factory = new Factory([
-                'hashKey'    => $ecpaylogisticSetting[$this->prefix . 'hashkey'],
-                'hashIv'     => $ecpaylogisticSetting[$this->prefix . 'hashiv'],
-                'hashMethod' => 'md5',
-            ]);
-            $checkoutResponse = $factory->create(VerifiedArrayResponse::class);
-
             $query = $this->db->query('Select * from ' . DB_PREFIX . 'ecpaylogistic_response where AllPayLogisticsID=' . $this->db->escape($this->request->post['1|AllPayLogisticsID']));
             if ($query->num_rows) {
                 $aAL_info = $query->rows[0];
@@ -470,11 +453,11 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
      * @return string
      */
     public function sessionDecrypt($data) {
-        $hashKey = $this->config->get($this->prefix . 'hashkey');
-        $hashIv  = $this->config->get($this->prefix . 'hashiv');
-
+        $ecpaylogisticSetting = $this->get_logistic_settings();
+        $apiLogisticInfo = $this->helper->get_ecpay_logistic_api_info('', '', $ecpaylogisticSetting);
+        
         $dataBase64Decode = $this->base64Decode($data);
-        $dataAesDecrypt   = $this->aesDecrypt($dataBase64Decode, $hashKey, $hashIv);
+        $dataAesDecrypt   = $this->aesDecrypt($dataBase64Decode, $apiLogisticInfo['hashKey'], $apiLogisticInfo['hashIv']);
         $sessionId        = $this->urlDecode($dataAesDecrypt);
 
         return $sessionId;
@@ -486,10 +469,10 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
      * @return string
      */
     public function sessionEncrypt($sessionId) {
-        $hashKey = $this->config->get($this->prefix . 'hashkey');
-        $hashIv  = $this->config->get($this->prefix . 'hashiv');
+        $ecpaylogisticSetting = $this->get_logistic_settings();
+        $apiLogisticInfo = $this->helper->get_ecpay_logistic_api_info('', '', $ecpaylogisticSetting);
 
-        $dataEncrypt      = $this->aesEncrypt($sessionId, $hashKey, $hashIv);
+        $dataEncrypt      = $this->aesEncrypt($sessionId, $apiLogisticInfo['hashKey'], $apiLogisticInfo['hashIv']);
         $dataBase64Encode = $this->base64Encode($dataEncrypt);
         $dataUrlEncode    = $this->urlEncode($dataBase64Encode);
 
@@ -556,5 +539,17 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
     public function urlDecode($encoded) {
         return urldecode($encoded);
     }
+
+    public function get_logistic_settings() {
+		$ecpaylogisticSetting = array();
+        $sFieldName  = 'code';
+        $sFieldValue = 'shipping_' . $this->ecpay_logistic_module_name;
+        $get_ecpaylogistic_setting_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `" . $sFieldName . "` = '" . $sFieldValue . "'");
+        foreach ($get_ecpaylogistic_setting_query->rows as $value) {
+            $ecpaylogisticSetting[$value["key"]] = $value["value"];
+        }
+
+		return $ecpaylogisticSetting;
+	}
 }
 ?>

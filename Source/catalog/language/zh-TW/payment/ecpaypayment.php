@@ -13,9 +13,12 @@ $_['ecpaypayment_text_webatm']                 = '網路ATM';
 $_['ecpaypayment_text_atm']                    = 'ATM';
 $_['ecpaypayment_text_cvs']                    = '超商代碼';
 $_['ecpaypayment_text_barcode']                = '超商條碼';
-$_['ecpaypayment_text_cod'] 		           = '貨到付款';
-$_['ecpaypayment_text_bnpl'] 		           = '無卡分期';
-$_['ecpaypayment_text_twqr'] 		           = '歐付寶TWQR';
+$_['ecpaypayment_text_cod']                    = '貨到付款';
+$_['ecpaypayment_text_bnpl']                   = '無卡分期';
+$_['ecpaypayment_text_twqr']                   = '歐付寶TWQR';
+$_['ecpaypayment_text_dca']                    = '定期定額';
+$_['ecpaypayment_text_applepay']               = 'Apple Pay';
+$_['ecpaypayment_text_unionpay']               = '銀聯卡';
 
 $_['ecpaypayment_text_item_name']              = '網路商品一批';
 $_['ecpaypayment_text_payment_result_comment'] = '綠界%s付款結果：(%s)%s';

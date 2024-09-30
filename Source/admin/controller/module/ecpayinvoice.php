@@ -65,6 +65,8 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         $data['entry_mid']       = $this->language->get('entry_mid');
         $data['entry_hashkey']   = $this->language->get('entry_hashkey');
         $data['entry_hashiv']    = $this->language->get('entry_hashiv');
+        $data['entry_test_mode'] = $this->language->get('entry_test_mode');
+        $data['entry_test_mode_info'] = $this->language->get('entry_test_mode_info');
         $data['entry_autoissue'] = $this->language->get('entry_autoissue');
         $data['entry_status']    = $this->language->get('entry_status');
 
@@ -80,6 +82,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
             'entry_mid',
             'entry_hashkey',
             'entry_hashiv',
+            'entry_test_mode',
             'entry_autoissue',
         );
         foreach ($translation_names as $name) {
@@ -152,6 +155,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
             'mid',
             'hashkey',
             'hashiv',
+            'test_mode',
             'autoissue',
         );
 
@@ -235,7 +239,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
 
             // 判斷是否啟動ECPAY電子發票開立並且選擇綠界金流
             $invoiceStatus = $this->config->get($this->setting_prefix . 'status');
-
+            
             if ($invoiceStatus == 1 && $paymentMethod[0] == 'ecpaypayment') {
                 // 1.參數初始化
                 define('WEB_MESSAGE_NEW_LINE', '|'); // 前端頁面訊息顯示換行標示語法
@@ -243,13 +247,6 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                 $sMsg   = '';
                 $sMsgP2 = ''; // 金額有差異提醒
                 $bError = false; // 判斷各參數是否有錯誤，沒有錯誤才可以開發票
-
-                // 2.取出開立相關參數
-
-                // *連線資訊
-                $ecpayinvoiceMid     = $this->config->get($this->setting_prefix . 'mid'); // 廠商代號
-                $ecpayinvoiceHashkey = $this->config->get($this->setting_prefix . 'hashkey'); // 金鑰
-                $ecpayinvoiceHashiv  = $this->config->get($this->setting_prefix . 'hashiv'); // 向量
 
                 // *訂單資訊
                 $orderProduct = $this->model_sale_order->getProducts($orderId); // 訂購商品
@@ -266,20 +263,23 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                     $invoiceInfo = $query->rows[0];
                 }
 
+                $ecpayinvoiceTestMode = $this->config->get($this->setting_prefix . 'test_mode');	// 測試模式
+                $apiInfo = $this->helper->get_ecpay_invoice_api_info('issue', $ecpayinvoiceTestMode);
+
                 // *MID判斷是否有值
-                if ($ecpayinvoiceMid == '') {
+                if ($apiInfo['merchantId'] == '') {
                     $bError = true;
                     $sMsg .= (empty($sMsg) ? '' : WEB_MESSAGE_NEW_LINE) . '請填寫商店代號(Merchant ID)。';
                 }
 
                 // *HASHKEY判斷是否有值
-                if ($ecpayinvoiceHashkey == '') {
+                if ($apiInfo['hashKey'] == '') {
                     $bError = true;
                     $sMsg .= (empty($sMsg) ? '' : WEB_MESSAGE_NEW_LINE) . '請填寫金鑰(Hash Key)。';
                 }
 
                 // *HASHIV判斷是否有值
-                if ($ecpayinvoiceHashiv == '') {
+                if ($apiInfo['hashIv'] == '') {
                     $bError = true;
                     $sMsg .= (empty($sMsg) ? '' : WEB_MESSAGE_NEW_LINE) . '請填寫向量(Hash IV)。';
                 }
@@ -461,15 +461,15 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                             $orderExtend  = $this->db->query('Select * from ' . DB_PREFIX . 'order_extend where order_id=' . $orderId);
                             $creditRemark = ' 信用卡末四碼' . ($orderExtend->row['card_no4']) ?? '';
                         }
-
+                        
                         $factory = new Factory([
-                            'hashKey' => $ecpayinvoiceHashkey,
-                            'hashIv'  => $ecpayinvoiceHashiv,
+                            'hashKey' => $apiInfo['hashKey'],
+                            'hashIv'  => $apiInfo['hashIv'],
                         ]);
                         $postService = $factory->create('PostWithAesJsonResponseService');
 
                         $data = [
-                            'MerchantID'         => $ecpayinvoiceMid,
+                            'MerchantID'         => $apiInfo['merchantId'],
                             'RelateNumber'       => $relateNumber,
                             'CustomerID'         => '',
                             'CustomerIdentifier' => $customerIdentifier,
@@ -492,7 +492,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                         ];
 
                         $input = [
-                            'MerchantID' => $ecpayinvoiceMid,
+                            'MerchantID' => $apiInfo['merchantId'],
                             'RqHeader'   => [
                                 'Timestamp' => time(),
                                 'Revision'  => '3.0.0',
@@ -500,7 +500,6 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                             'Data'       => $data,
                         ];
 
-                        $apiInfo    = $this->helper->get_ecpay_invoice_api_info('issue', $ecpayinvoiceMid);
                         $returnInfo = $postService->post($input, $apiInfo['action']);
                     } catch (Exception $e) {
                         // 例外錯誤處理

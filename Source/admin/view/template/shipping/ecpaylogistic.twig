@@ -118,6 +118,16 @@
                                             <div id="error-shipping-ecpaylogistic-hashiv" class="invalid-feedback"></div>
                                         </div>
                                     </div>
+                                    <div class="row mb-3">
+                                        <label for="input-shipping-ecpaylogistic-test-mode" class="col-sm-2 col-form-label">{{ entry_test_mode }}</label>
+                                        <div class="col-sm-8">
+                                            <small>{{ entry_test_mode_info }}</small>
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_test_mode" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_test_mode" value="1" id="input-shipping-ecpaylogistic-test-mode" class="form-check-input" {% if shipping_ecpaylogistic_test_mode %} checked {% endif %}/>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!--logistic Types-->
                                     <div class="row mb-3 required">
                                         <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-hashiv">

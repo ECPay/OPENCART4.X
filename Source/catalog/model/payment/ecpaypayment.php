@@ -81,6 +81,15 @@ class EcpayPayment extends \Opencart\System\Engine\Model {
                 if (6 > $cart_total || $cart_total > 49999) {
                     unset($method_data['option']['twqr']);
                 }
+
+                // 判斷是否可選定期定額
+                $dca_period_type = $this->config->get($this->setting_prefix . 'dca_period_type');
+                $dca_frequency = $this->config->get($this->setting_prefix . 'dca_frequency');
+                $dca_exec_times = $this->config->get($this->setting_prefix . 'dca_exec_times');
+                if (!in_array($dca_period_type, ['Y', 'M', 'D']) || $dca_frequency == '' || $dca_exec_times == '') {
+                    unset($method_data['option']['dca']);
+                }
+
                 // 判斷是否可選貨到付款，運送方式必須是綠界物流
                 $shipping_method_code = $this->session->data['shipping_method']['code'];
                 $shipping_method_code = explode('.', $shipping_method_code);
@@ -194,7 +203,7 @@ class EcpayPayment extends \Opencart\System\Engine\Model {
             $table,
             (int)$order_id,
             $this->db->escape($inputs['goodsWeight']),
-            $now_time )
-    	);
+            $now_time
+        ));
     }
 }

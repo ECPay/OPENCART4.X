@@ -7,12 +7,16 @@ use Opencart\System\Library\ModuleHelper;
 
 class EcpayPaymentHelper extends ModuleHelper
 {
+    private $module_name = 'ecpaypayment';
+    private $setting_prefix;
+
     /**
      * EcpayPaymentHelper constructor.
      */
     public function __construct()
     {
         parent::__construct();
+        $this->setting_prefix = 'payment_' . $this->module_name . '_';
     }
 
     /**
@@ -34,6 +38,8 @@ class EcpayPaymentHelper extends ModuleHelper
                 if (isset($choosePaymentArray[1]) === true && in_array($choosePaymentArray[1], ['3', '6', '12', '18', '24', '30'])) {
                     $input['CreditInstallment'] = ($choosePaymentArray[1] == '30') ? '30N' : $choosePaymentArray[1];
                 }
+                // 關閉銀聯
+                $input['UnionPay'] = 2;
                 break;
 
             case 'atm':
@@ -47,6 +53,14 @@ class EcpayPaymentHelper extends ModuleHelper
             case 'cvs':
                 $input['StoreExpireDate'] = 10080;
                 break;
+
+            case 'dca':
+                $input['PeriodAmount'] = $input['TotalAmount'];
+                break;
+
+            case 'unionpay':
+                $input['UnionPay'] = 1;
+                break;
         }
 
         return $input;
@@ -58,14 +72,18 @@ class EcpayPaymentHelper extends ModuleHelper
      * @param  string $mid
      * @return string|false
      */
-    public function get_ecpay_payment_api_info($action = '', $mid = '')
+    public function get_ecpay_payment_api_info($action = '', $test_mode = '')
     {
         $api_payment_info = [
             'action'        => '',
         ];
 
         // URL位置判斷
-        if ($mid == '3002607' || $mid == '3002599' || $mid == '2000132') {
+        if ($test_mode) {
+            $api_payment_info['merchantId'] = '3002607';
+            $api_payment_info['hashKey'] = 'pwFHCqoQZGmho4w6';
+            $api_payment_info['hashIv'] = 'EkRm7iFT261dpevs';
+
             switch ($action) {
                 case 'QueryTradeInfo':
                     $api_payment_info['action'] = 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5';
@@ -80,6 +98,10 @@ class EcpayPaymentHelper extends ModuleHelper
             }
         }
         else {
+            $api_payment_info['merchantId'] = $this->config->get($this->setting_prefix . 'merchant_id');
+            $api_payment_info['hashKey'] = $this->config->get($this->setting_prefix . 'hash_key');
+            $api_payment_info['hashIv'] = $this->config->get($this->setting_prefix . 'hash_iv');
+
             switch ($action) {
                 case 'QueryTradeInfo':
                     $api_payment_info['action'] = 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo/V5';
@@ -140,6 +162,8 @@ class EcpayPaymentHelper extends ModuleHelper
             switch($paymentTypeArray[0]) {
                 case 'Credit':
                 case 'TWQR':
+                case 'ApplePay':
+                case 'UnionPay':
                     return sprintf(
                         $pattern,
                         $inputs['PaymentType'],
@@ -194,6 +218,19 @@ class EcpayPaymentHelper extends ModuleHelper
                         $inputs['BNPLInstallment']
                     );
                     break;
+                case 'DCA':
+                    return sprintf(
+                        $pattern,
+                        $inputs['PaymentType'],
+                        $inputs['RtnCode'],
+                        $inputs['RtnMsg'],
+                        $inputs['PeriodAmount'],
+                        $inputs['PeriodType'],
+                        $inputs['Frequency'],
+                        $inputs['ExecTimes']
+                    );
+
+                    break;
                 default:
                     break;
             }
@@ -216,6 +253,8 @@ class EcpayPaymentHelper extends ModuleHelper
         $choosePaymentArray = explode('_', $choose_payment);
         switch ($choosePaymentArray[0]) {
             case 'credit':
+            case 'dca':
+            case 'unionpay':
                 $sdkPayment = 'Credit';
                 break;
             case 'webatm':
@@ -235,6 +274,9 @@ class EcpayPaymentHelper extends ModuleHelper
                 break;
             case 'twqr':
                 $sdkPayment = 'TWQR';
+                break;
+            case 'applepay':
+                $sdkPayment = 'ApplePay';
                 break;
         }
 

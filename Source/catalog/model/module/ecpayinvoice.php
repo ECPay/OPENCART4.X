@@ -49,13 +49,6 @@ class EcpayInvoice extends \Opencart\System\Engine\Model
 		$sMsgP2 			= '' ;		      // 金額有差異提醒
 		$bError 			= false ; 	      // 判斷各參數是否有錯誤，沒有錯誤才可以開發票
 
-		// 2.取出開立相關參數
-
-		// *連線資訊
-		$ecpayinvoiceMid 	 = $this->config->get($this->setting_prefix . 'mid');		// 廠商代號
-		$ecpayinvoiceHashkey = $this->config->get($this->setting_prefix . 'hashkey');	// 金鑰
-		$ecpayinvoiceHashiv  = $this->config->get($this->setting_prefix . 'hashiv');	// 向量
-
 		// *訂單資訊
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$orderId . "'" );
 		$orderInfo = $query->rows[0] ;
@@ -69,23 +62,24 @@ class EcpayInvoice extends \Opencart\System\Engine\Model
 		// *統編與愛心碼資訊
 		$queryInvoice = $this->db->query("SELECT * FROM " . DB_PREFIX . "invoice_info WHERE order_id = '" . (int)$orderId . "'" );
 
+		$ecpayinvoiceTestMode = $this->config->get($this->setting_prefix . 'test_mode');	// 測試模式
+		$apiInfo = $this->helper->get_ecpay_invoice_api_info('issue', $ecpayinvoiceTestMode);
 
 		// 3.判斷資料正確性
-
 		// *MID判斷是否有值
-		if ($ecpayinvoiceMid == '') {
+		if ($apiInfo['merchantId'] == '') {
 			$bError = true ;
 			$sMsg .= ( empty($sMsg) ? '' : WEB_MESSAGE_NEW_LINE ) . '請填寫商店代號(Merchant ID)。';
 		}
 
 		// *HASHKEY判斷是否有值
-		if ($ecpayinvoiceHashkey == '') {
+		if ($apiInfo['hashKey'] == '') {
 			$bError = true ;
 			$sMsg .= ( empty($sMsg) ? '' : WEB_MESSAGE_NEW_LINE ) . '請填寫金鑰(Hash Key)。';
 		}
 
 		// *HASHIV判斷是否有值
-		if ($ecpayinvoiceHashiv == '') {
+		if ($apiInfo['hashIv'] == '') {
 			$bError = true ;
 			$sMsg .= ( empty($sMsg) ? '' : WEB_MESSAGE_NEW_LINE ) . '請填寫向量(Hash IV)。';
 		}
@@ -277,13 +271,13 @@ class EcpayInvoice extends \Opencart\System\Engine\Model
 				}
 
 				$factory = new Factory([
-					'hashKey' => $ecpayinvoiceHashkey,
-					'hashIv'  => $ecpayinvoiceHashiv,
+					'hashKey' => $apiInfo['hashKey'],
+					'hashIv'  => $apiInfo['hashIv'],
 				]);
 				$postService = $factory->create('PostWithAesJsonResponseService');
 
 				$data = [
-					'MerchantID'         => $ecpayinvoiceMid,
+					'MerchantID'         => $apiInfo['merchantId'],
 					'RelateNumber'       => $relateNumber,
 					'CustomerID'         => '',
 					'CustomerIdentifier' => $customerIdentifier,
@@ -306,7 +300,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Model
 				];
 
 				$input = [
-					'MerchantID' => $ecpayinvoiceMid,
+					'MerchantID' => $apiInfo['merchantId'],
 					'RqHeader' => [
 						'Timestamp' => time(),
 						'Revision' => '3.0.0',
@@ -314,7 +308,6 @@ class EcpayInvoice extends \Opencart\System\Engine\Model
 					'Data' => $data,
 				];
 
-				$apiInfo = $this->helper->get_ecpay_invoice_api_info('issue', $ecpayinvoiceMid);
 				$returnInfo = $postService->post($input, $apiInfo['action']);
 			} catch (Exception $e) {
 				// 例外錯誤處理。
@@ -456,12 +449,13 @@ class EcpayInvoice extends \Opencart\System\Engine\Model
             } else {
                 // 呼叫 SDK 捐贈碼驗證
                 if ($switch) {
-                    $invoiceApiInfo = $this->helper->get_ecpay_invoice_api_info('check_Love_code', $this->config->get($this->setting_prefix . 'mid'));
+					$testMode = $this->config->get($this->setting_prefix . 'test_mode');
+                    $invoiceApiInfo = $this->helper->get_ecpay_invoice_api_info('check_Love_code', $testMode);
 
                     try {
                         $factory = new Factory([
-                            'hashKey' 	=> $this->config->get($this->setting_prefix . 'hashkey'),
-                            'hashIv' 	=> $this->config->get($this->setting_prefix . 'hashiv'),
+                            'hashKey' 	=> $invoiceApiInfo['hashKey'],
+                            'hashIv' 	=> $invoiceApiInfo['hashIv'],
                         ]);
 
                         $postService = $factory->create('PostWithAesJsonResponseService');
@@ -554,12 +548,13 @@ class EcpayInvoice extends \Opencart\System\Engine\Model
             } else {
                 // 呼叫 SDK 手機條碼驗證
                 if ($switch) {
-                    $invoiceApiInfo = $this->helper->get_ecpay_invoice_api_info('check_barcode', $this->config->get($this->setting_prefix . 'mid'));
+					$testMode = $this->config->get($this->setting_prefix . 'test_mode');
+                    $invoiceApiInfo = $this->helper->get_ecpay_invoice_api_info('check_barcode', $testMode);
 
                     try {
                         $factory = new Factory([
-                            'hashKey' 	=> $this->config->get($this->setting_prefix . 'hashkey'),
-                            'hashIv' 	=> $this->config->get($this->setting_prefix . 'hashiv'),
+                            'hashKey' 	=> $invoiceApiInfo['hashKey'],
+                            'hashIv' 	=> $invoiceApiInfo['hashIv'],
                         ]);
 
                         $postService = $factory->create('PostWithAesJsonResponseService');

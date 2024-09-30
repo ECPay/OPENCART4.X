@@ -37,6 +37,7 @@ class Ecpaypayment extends \Opencart\System\Engine\Model {
         $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "merchant_id' , `value` = '3002607';");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "hash_key' , `value` = 'pwFHCqoQZGmho4w6';");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "hash_iv' , `value` = 'EkRm7iFT261dpevs';");
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "test_mode' , `value` = '1';");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "create_status' , `value` = '1';");
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = 0 , `" . $sFieldName . "` = '" . $sFieldValue . "' , `key` = '" . $this->prefix . "success_status' , `value` = '15';");
     }
@@ -44,5 +45,6 @@ class Ecpaypayment extends \Opencart\System\Engine\Model {
     // uninstall
     public function uninstall() {
         $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "order_extend`;");
+        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "ecpay_order_extend`;");
     }
 }

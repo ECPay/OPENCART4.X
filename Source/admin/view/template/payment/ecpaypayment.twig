@@ -83,6 +83,18 @@
                     </div>
 
                     <div class="row mb-3">
+                        <label for="input-{{ id_prefix }}-test-mode" class="col-sm-2 col-form-label">{{ entry_test_mode }}{{payment_ecpaypayment_test_mode}}</label>
+
+						<div class="col-sm-8">
+                            <small>{{ ecpaypayment_entry_test_mode_info }}</small>
+							<div class="form-check form-switch form-switch-lg">
+								<input type="hidden" name="{{ name_prefix }}_test_mode" value="0"/>
+								<input type="checkbox" name="{{ name_prefix }}_test_mode" value="1" id="input-test-mode" class="form-check-input" {% if test_mode %} checked {% endif %}/>
+							</div>
+						</div>
+                    </div>
+
+                    <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="input-{{ id_prefix }}-methods">
                             {{ entry_payment_methods }}
                         </label>
@@ -229,6 +241,76 @@
                             </label>
 
                             <br />
+
+                            {% if payment_methods.DCA is defined %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[DCA]" value="dca" checked="checked" />
+                            {% else %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[DCA]" value="dca" />
+                            {% endif %}
+                            <label class="form-label" for="input-{{ id_prefix }}-payment-methods">
+                                &nbsp;{{ text_dca }}
+                            </label>
+
+                            <br />
+
+                            {% if payment_methods.ApplePay is defined %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[ApplePay]" value="applepay" checked="checked" />
+                            {% else %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[ApplePay]" value="applepay" />
+                            {% endif %}
+                            <label class="form-label" for="input-{{ id_prefix }}-payment-methods">
+                                &nbsp;{{ text_applepay }}
+                            </label>
+
+                            <br />
+
+                            {% if payment_methods.UnionPay is defined %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[UnionPay]" value="unionpay" checked="checked" />
+                            {% else %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[UnionPay]" value="unionpay" />
+                            {% endif %}
+                            <label class="form-label" for="input-{{ id_prefix }}-payment-methods">
+                                &nbsp;{{ text_unionpay }}
+                            </label>
+
+                            <br />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="input-{{ id_prefix }}-dca-period-type">
+                            {{ entry_dca_period_type }}
+                        </label>
+                        <div class="col-sm-8">
+                            <select name="{{ name_prefix }}_dca_period_type" id="input-{{ id_prefix }}-dca-period-type" class="form-select">
+                                {% for period_type in dca_period_types %}
+                                    {% if period_type == dca_period_type %}
+                                        <option value="{{ period_type }}" selected="selected">{{ period_type }}</option>
+                                    {% else %}
+                                        <option value="{{ period_type }}">{{ period_type }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="input-{{ id_prefix }}-dca-frequency">
+                            {{ entry_dca_frequency  }}
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" name="{{ name_prefix }}_dca_frequency" value="{{ dca_frequency }}" placeholder="{{ entry_dca_frequency }}" id="input-{{ id_prefix }}-dca-frequency" class="form-control" />
+                            <div id="error-{{ id_prefix }}-dca-frequency" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="input-{{ id_prefix }}-dca-exec-times">
+                            {{ entry_dca_exec_times }}
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" name="{{ name_prefix }}_dca_exec_times" value="{{ dca_exec_times }}" placeholder="{{ entry_dca_exec_times }}" id="input-{{ id_prefix }}-dca-exec-times" class="form-control" />
+                            <div id="error-{{ id_prefix }}-dca-exec-times" class="invalid-feedback"></div>
                         </div>
                     </div>
 

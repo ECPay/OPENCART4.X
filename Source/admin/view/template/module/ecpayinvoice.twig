@@ -59,6 +59,18 @@
                             <div id="error-{{ id_prefix }}-hashiv" class="invalid-feedback"></div>
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <label for="input-{{ id_prefix }}-test-mode" class="col-sm-2 col-form-label">{{ entry_test_mode }}</label>
+						<div class="col-sm-8">
+                            <small>{{ entry_test_mode_info }}</small>
+							<div class="form-check form-switch form-switch-lg">
+								<input type="hidden" name="{{ name_prefix }}_test_mode" value="0"/>
+								<input type="checkbox" name="{{ name_prefix }}_test_mode" value="1" id="input-{{ id_prefix }}-test-mode" class="form-check-input" {% if module_ecpayinvoice_test_mode %} checked {% endif %}/>
+							</div>
+						</div>
+                    </div>
+
                     <!--自動開立電子發票-->
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="input-{{ id_prefix }}-autoissue">{{ entry_autoissue }}</label>

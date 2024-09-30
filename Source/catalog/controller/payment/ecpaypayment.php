@@ -189,9 +189,15 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller {
                 $status_id = $this->config->get($this->setting_prefix . 'create_status');
                 $this->model_checkout_order->addHistory($order_id, $status_id, $comment, true, false);
 
-                // 儲存訂單商品重量
+                // 商品重量、金流測試模式
                 $weight = $this->cart->getWeight();
-                $this->{$this->model_name}->insertEcpayOrderExtend($order_id, ['goodsWeight' => $weight]);
+                $payment_test_mode = $this->config->get($this->setting_prefix . 'test_mode');
+                $extra_order_data = [
+                    'goodsWeight' => $weight, 
+                ];
+                
+                // 儲存訂單額外資訊
+                $this->{$this->model_name}->insertEcpayOrderExtend($order_id, $extra_order_data);
 
                 // Clear the cart
                 $this->cart->clear();
@@ -236,20 +242,20 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller {
                     unset($this->session->data[$name]);
                 }
 
-                $factory = new Factory([
-                    'hashKey' => $this->config->get($this->setting_prefix . 'hash_key'),
-                    'hashIv'  => $this->config->get($this->setting_prefix . 'hash_iv'),
-                ]);
+                $apiPaymentInfo        = $this->helper->get_ecpay_payment_api_info('AioCheckOut', $payment_test_mode);
 
+                $factory = new Factory([
+                    'hashKey' => $apiPaymentInfo['hashKey'],
+                    'hashIv'  => $apiPaymentInfo['hashIv'],
+                ]);
                 $autoSubmitFormService = $factory->create('AutoSubmitFormWithCmvService');
-                $apiPaymentInfo        = $this->helper->get_ecpay_payment_api_info('AioCheckOut', $this->config->get($this->setting_prefix . 'merchant_id'));
 
                 // 取得 SDK ChoosePayment
                 $sdkPayment = $this->helper->getSdkPayment($choose_payment_array[1]);
 
                 // 組合送往 AIO 參數
                 $input = array(
-                    'MerchantID'        => $this->config->get($this->setting_prefix . 'merchant_id'),
+                    'MerchantID'        => $apiPaymentInfo['merchantId'],
                     'MerchantTradeNo'   => $this->helper->getMerchantTradeNo($order_id),
                     'MerchantTradeDate' => date('Y/m/d H:i:s'),
                     'PaymentType'       => 'aio',
@@ -259,12 +265,18 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller {
                     'ChoosePayment'     => $sdkPayment,
                     'EncryptType'       => 1,
                     'ReturnURL'         => $this->url->link($this->module_path . '|response', '', true),
-                    'ClientBackURL'     => $this->url->link('checkout/success'),
+                    'ClientBackURL'     => $this->url->link($this->module_path . '|client_back', 'order_id=' . $order_id, true),
                     'PaymentInfoURL'    => $this->url->link($this->module_path . '|response', '', true),
                     'NeedExtraPaidInfo' => 'Y',
                 );
 
                 // 取得額外參數
+                if ($choose_payment_array[1] == 'dca') {
+                    $input['PeriodReturnURL'] = $this->url->link($this->module_path . '|response', '', true);
+                    $input['Frequency'] = $this->config->get($this->setting_prefix . 'dca_frequency');
+                    $input['ExecTimes'] = $this->config->get($this->setting_prefix . 'dca_exec_times');
+                    $input['PeriodType'] = $this->config->get($this->setting_prefix . 'dca_period_type');
+                }
                 $input = $this->helper->add_type_info($input, $choose_payment_array[1]);
 
                 $generateForm = $autoSubmitFormService->generate($input, $apiPaymentInfo['action']);
@@ -292,26 +304,32 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller {
         $order          = null;
 
         try {
+            $payment_test_mode = $this->config->get($this->setting_prefix . 'test_mode');
+            $apiPaymentInfo = $this->helper->get_ecpay_payment_api_info('', $payment_test_mode);
+            
             $factory = new Factory([
-                'hashKey' => $this->config->get($this->setting_prefix . 'hash_key'),
-                'hashIv'  => $this->config->get($this->setting_prefix . 'hash_iv'),
+                'hashKey' => $apiPaymentInfo['hashKey'],
+                'hashIv'  => $apiPaymentInfo['hashIv'],
             ]);
 
             $checkoutResponse = $factory->create(VerifiedArrayResponse::class);
             $info             = $checkoutResponse->get($_POST);
-
             $order_id = $this->helper->getOrderIdByMerchantTradeNo($info);
 
             // Get the cart order info
             $order            = $this->model_checkout_order->getOrder($order_id);
             $order_status_id  = $order['order_status_id'];
-            $create_status_id = $this->config->get($this->setting_prefix . 'create_status');
             $order_total      = $order['total'];
 
             // Check the amounts
             if (round($info['TradeAmt'], 0) == round($order_total, 0)) {
                 if (($info['SimulatePaid'] ?? '') == 1) {
                     // Simulate paid
+                    // 定期定額新增訂單 (非第一次回傳)
+                    if (isset($info['PeriodType']) && $info['PeriodType'] != '' && $info['TotalSuccessTimes'] > 1) {
+                        $order_id = $this->create_dca_order($info, $order_id);
+                    }
+
                     $status_id = $order_status_id;
                     $comment   = $this->language->get($this->lang_prefix . 'text_simulate_paid');
                     $this->model_checkout_order->addHistory($order_id, $status_id, $comment, false, false);
@@ -321,6 +339,11 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller {
                     switch ($info['RtnCode']) {
                     // Paid
                     case 1:
+                        // 定期定額新增訂單 (非第一次回傳)
+                        if (isset($info['PeriodType']) && $info['PeriodType'] != '' && $info['TotalSuccessTimes'] > 1) {
+                            $order_id = $this->create_dca_order($info, $order_id);
+                        }
+
                         $status_id = $this->config->get($this->setting_prefix . 'success_status');
                         $pattern   = $this->language->get($this->lang_prefix . 'text_payment_result_comment');
                         $comment   = $this->helper->getComment($pattern, $info);
@@ -409,6 +432,98 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller {
         }
 
         $this->helper->echoAndExit($result_message);
+    }
+
+    /**
+     * AIO 返回商店按鈕轉導結果頁
+     */
+    public function client_back() {
+        if (!is_null($_GET['order_id'])) {
+            $this->load->model('checkout/order');
+            $order = $this->model_checkout_order->getOrder($_GET['order_id']);
+            $order_status_id  = $order['order_status_id'];
+
+            // 訂單狀態為取消
+            if ($order_status_id == '7') {
+                $this->response->redirect($this->url->link('checkout/failure'));
+            }
+        }
+
+        $this->response->redirect($this->url->link('checkout/success'));
+    }
+
+    /**
+     * 建立定期定額新訂單
+     * @param array $info
+     * @param int $order_id
+     */
+    public function create_dca_order($info, $order_id) {
+        $this->load->model('checkout/order');
+        
+        // 取得舊訂單
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if ($order_info) {
+            // 取得舊訂單資訊
+            $order_products = $this->model_checkout_order->getProducts($order_id);
+            foreach ($order_products as $key => $product) {
+                $option_data = [];
+                $options = $this->model_checkout_order->getOptions($order_id, $product['order_product_id']);
+
+                if(!empty($options)){
+                    foreach ($options as $option) {
+                        $option_data[] = [
+                            'product_option_id'       => $option['product_option_id'],
+                            'product_option_value_id' => $option['product_option_value_id'],
+                            'option_id'               => $option['option_id'] ?? '',
+                            'option_value_id'         => $option['option_value_id'] ?? '',
+                            'name'                    => $option['name'],
+                            'value'                   => $option['value'],
+                            'type'                    => $option['type']
+                        ];
+                    }   
+                }
+    
+                $subscription_data = [];
+                if (isset($product['subscription']) && $product['subscription']) {
+                    $subscription_data = [
+                        'subscription_plan_id' => $product['subscription']['subscription_plan_id'],
+                        'name'                 => $product['subscription']['name'],
+                        'trial_price'          => $product['subscription']['trial_price'],
+                        'trial_tax'            => $this->tax->getTax($product['subscription']['trial_price'], $product['tax_class_id']),
+                        'trial_frequency'      => $product['subscription']['trial_frequency'],
+                        'trial_cycle'          => $product['subscription']['trial_cycle'],
+                        'trial_duration'       => $product['subscription']['trial_duration'],
+                        'trial_remaining'      => $product['subscription']['trial_remaining'],
+                        'trial_status'         => $product['subscription']['trial_status'],
+                        'price'                => $product['subscription']['price'],
+                        'tax'                  => $this->tax->getTax($product['subscription']['price'], $product['tax_class_id']),
+                        'frequency'            => $product['subscription']['frequency'],
+                        'cycle'                => $product['subscription']['cycle'],
+                        'duration'             => $product['subscription']['duration']
+                    ];
+                }
+
+                $order_products[$key]['option'] = $option_data;
+                $order_products[$key]['subscription'] = $subscription_data;
+            }
+            
+            $order_info['products'] = $order_products;
+            $order_info['vouchers'] = $this->model_checkout_order->getVouchers($order_id);
+            $order_info['totals'] = $this->model_checkout_order->getTotals($order_id);
+
+            // 建立新訂單 data
+            $new_order_data = $order_info;
+
+            // 儲存成新訂單
+            $new_order_id = $this->model_checkout_order->addOrder($new_order_data);
+
+            // 新訂單新增歷程
+            $this->model_checkout_order->addHistory($new_order_id, $order_info['order_status_id'], '定期定額付款第' . $info['TotalSuccessTimes'] . '次繳費成功，原始訂單編號: ' . $order_id, false);
+            // 舊訂單新增歷程
+            $this->model_checkout_order->addHistory($order_id, $order_info['order_status_id'], '定期定額付款第' . $info['TotalSuccessTimes'] . '次繳費成功，新訂單號: ' . $new_order_id, false);
+
+            return $new_order_id;
+        }
     }
 }
 ?>
