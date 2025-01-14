@@ -17,7 +17,7 @@ class Person extends \Faker\Provider\Person
     protected static $titleFemale = array('女士', '小姐', '夫人', '太太', '医生', '老师', '教授', '律师', '经理');
 
     /**
-     * According to https://baike.baidu.com/view/6109935.htm,
+     * According to http://baike.baidu.com/view/6109935.htm,
      * these are the top 300 lastnames from the 6th Chinese national census of population,
      * containing 299 single-character surname and 1 double-character surname '欧阳',
      * so you can get random names including double-character surname but not too many.

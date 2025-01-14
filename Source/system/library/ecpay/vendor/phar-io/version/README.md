@@ -16,7 +16,7 @@ If you only need this library during development, for instance to run your proje
 
 ## Version constraints
 
-A Version constraint describes a range of versions or a discrete version number. The format of version numbers follows the schema of [semantic versioning](https://semver.org): `<major>.<minor>.<patch>`. A constraint might contain an operator that describes the range.
+A Version constraint describes a range of versions or a discrete version number. The format of version numbers follows the schema of [semantic versioning](http://semver.org): `<major>.<minor>.<patch>`. A constraint might contain an operator that describes the range.
 
 Beside the typical mathematical operators like `<=`, `>=`, there are two special operators:
 

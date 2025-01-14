@@ -23,7 +23,7 @@ class Address extends \Faker\Provider\Address
     );
     /**
      * @var array Countries in Polish
-     * @link https://ksng.gugik.gov.pl/english/files/dictionary.pdf
+     * @link http://ksng.gugik.gov.pl/english/files/dictionary.pdf
      */
     protected static $country = array(
         'Afganistan', 'Albania', 'Algieria', 'Andora', 'Angola', 'Antigua i Barbuda', 'Arabia Saudyjska', 'Argentyna',
@@ -53,7 +53,7 @@ class Address extends \Faker\Provider\Address
     /**
      * @var array 250 Polish cities with biggest number of streets. Extracted from data issued by the official
      * public postal service of Poland.
-     * @link https://www.poczta-polska.pl/
+     * @link http://www.poczta-polska.pl/
      */
     protected static $city = array(
         'Babienica','Bartoszyce','Bełchatów','Bezrzecze','Będzin','Biała Podlaska','Białystok',
@@ -93,7 +93,7 @@ class Address extends \Faker\Provider\Address
     /**
      * @var array 549 most common Polish street names. Extracted from data issued by the official public
      * postal service of Poland.
-     * @link https://www.poczta-polska.pl/
+     * @link http://www.poczta-polska.pl/
      */
     protected static $street = array(
         '1 Maja','3 Maja','11 Listopada','Agrestowa','Akacjowa','Andersa Władysława','Armii Krajowej',

@@ -5,7 +5,7 @@ namespace Faker\Provider\id_ID;
 class Address extends \Faker\Provider\Address
 {
     /**
-     * @link https://bandung.go.id/images/download/daftarruasjalan.htm
+     * @link http://bandung.go.id/images/download/daftarruasjalan.htm
      **/
     protected static $street = array(
         "Abang", "Abdul", "Abdul Muis", "Abdul Rahmat", "Abdul. Muis", "Abdullah",
@@ -70,7 +70,7 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-     * @link https://kodepos.nomor.net/_kodepos.php?_i=provinsi-kodepos
+     * @link http://kodepos.nomor.net/_kodepos.php?_i=provinsi-kodepos
      */
     protected static $state = array(
         'Aceh', 'Sumatera Utara', 'Sumatera Barat', 'Jambi', 'Bangka Belitung', 'Riau',
@@ -97,38 +97,38 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-    * @link https://id.wikipedia.org/wiki/Daftar_negara-negara_di_dunia
+    * @link http://id.wikipedia.org/wiki/Daftar_negara-negara_di_dunia
     **/
     protected static $country = array(
         'Afganistan', 'Afrika Selatan', 'Albania', 'Aljazair',
         'Amerika Serikat', 'Andorra', 'Angola', 'Anguilla',
 
-        // https://id.wikipedia.org/wiki/Antartika
+        // http://id.wikipedia.org/wiki/Antartika
         'Antarktika',
 
         'Antigua and Barbuda',
 
-        // https://id.wikipedia.org/wiki/Antillen_Belanda
+        // http://id.wikipedia.org/wiki/Antillen_Belanda
         'Antillen Belanda',
 
         'Arab Saudi', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria',
         'Azerbaijan', 'Bahama', 'Bahrain', 'Bangladesh', 'Barbados', 'Belanda',
         'Belarus', 'Belgia', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia',
 
-        // https://id.wikipedia.org/wiki/Bosnia_dan_Herzegovina
+        // http://id.wikipedia.org/wiki/Bosnia_dan_Herzegovina
         'Bosnia dan Herzegovina',
 
         'Botswana', 'Brasil', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso',
         'Burundi', 'Chili', 'Cina', 'Cocos (Keeling)', 'Denmark', 'Djibouti',
 
-        // https://id.wikipedia.org/wiki/Dominica
+        // http://id.wikipedia.org/wiki/Dominica
         'Dominika',
 
         'Ekuador', 'El Salvador', 'Eritrea', 'Estonia', 'Ethiopia',
         'Federasi Rusia', 'Fiji', 'Filipina', 'Finlandia', 'Gabon', 'Gambia',
         'Georgia',
 
-        // https://id.wikipedia.org/wiki/South_Georgia_and_the_South_Sandwich_Islands
+        // http://id.wikipedia.org/wiki/South_Georgia_and_the_South_Sandwich_Islands
         'Georgia Selatan dan Kepulauan Sandwich Selatan',
 
         'Ghana', 'Gibraltar', 'Greenland', 'Grenada', 'Guadeloupe', 'Guam',
@@ -142,25 +142,25 @@ class Address extends \Faker\Provider\Address
         'Kepulauan Mariana Utara', 'Kepulauan Marshall', 'Kepulauan Pitcairn',
         'Kepulauan Solomon',
 
-        // https://id.wikipedia.org/wiki/United_States_Minor_Outlying_Islands
+        // http://id.wikipedia.org/wiki/United_States_Minor_Outlying_Islands
         'Kepulauan Terluar Kecil Amerika Serikat',
 
         'Kepulauan Turks dan Caicos',
 
-        // https://id.wikipedia.org/wiki/United_States_Virgin_Islands
+        // http://id.wikipedia.org/wiki/United_States_Virgin_Islands
         'Kepulauan Virgin Amerika Serikat',
 
         'Kepulauan Virgin Inggris', 'Kiribati', 'Kolombia', 'Komoro', 'Kongo', 'Korea',
         'Korea', 'Kosta Rika', 'Kroasia',
 
-        // https://id.wikipedia.org/wiki/Cuba
+        // http://id.wikipedia.org/wiki/Cuba
         'Kuba',
 
         'Kuwait', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libyan Arab Jamahiriya',
         'Liechtenstein', 'Lithuania', 'Luxembourg', 'Madagaskar', 'Makau', 'Makedonia',
         'Maladewa', 'Malawi', 'Malaysia', 'Mali', 'Malta', 'Maroko',
 
-        // https://id.wikipedia.org/wiki/Martinique
+        // http://id.wikipedia.org/wiki/Martinique
         'Martinik',
 
         'Mauritania', 'Mauritius', 'Mayotte', 'Meksiko', 'Mesir', 'Mikronesia', 'Moldova',
@@ -168,30 +168,30 @@ class Address extends \Faker\Provider\Address
         'Namibia', 'Nauru', 'Nepal', 'Niger', 'Nigeria', 'Nikaragua', 'Niue', 'Norwegia',
         'Oman', 'Pakistan', 'Palau', 'Panama',
 
-        // https://id.wikipedia.org/wiki/Cote_d%27Ivoire
+        // http://id.wikipedia.org/wiki/Cote_d%27Ivoire
         'Pantai Gading',
 
         'Papua Nugini', 'Paraguay', 'Peru', 'Polandia', 'Polinesia Prancis', 'Portugal',
         'Prancis', 'Puerto Rico',
 
-        // https://ms.wikipedia.org/wiki/Pulau_Bouvet
+        // http://ms.wikipedia.org/wiki/Pulau_Bouvet
         'Pulau Bouvet',
 
-        // https://id.wikipedia.org/wiki/Pulau_Heard_dan_Kepulauan_McDonald
+        // http://id.wikipedia.org/wiki/Pulau_Heard_dan_Kepulauan_McDonald
         'Pulau Heard dan Kepulauan McDonald',
 
-        // https://id.wikipedia.org/wiki/Isle_of_Man
+        // http://id.wikipedia.org/wiki/Isle_of_Man
         'Pulau Man',
 
         'Pulau Natal', 'Pulau Norfolk', 'Qatar', 'Republik Afrika Tengah',
         'Republik Ceko',
 
-        // https://id.wikipedia.org/wiki/Chad
+        // http://id.wikipedia.org/wiki/Chad
         'Republik Chad',
 
         'Republik Demokratik Rakyat Laos', 'Republik Dominika', 'Republik Kirgizstan',
 
-        // https://id.wikipedia.org/wiki/Reunion
+        // http://id.wikipedia.org/wiki/Reunion
         'Réunion',
 
         'Rumania', 'Rwanda', 'Sahara Barat', 'Saint Barthelemy', 'Saint Helena',
@@ -203,26 +203,26 @@ class Address extends \Faker\Provider\Address
         'Sudan', 'Suriah', 'Suriname', 'Svalbard & Jan Mayen Islands', 'Swaziland',
         'Swedia', 'Swiss', 'Taiwan', 'Tajikistan',
 
-        // https://id.wikipedia.org/wiki/Cape_Verde
+        // http://id.wikipedia.org/wiki/Cape_Verde
         'Tanjung Verde',
 
         'Tanzania', 'Thailand', 'Timor-Leste', 'Togo', 'Tokelau', 'Tonga',
         'Trinidad dan Tobago', 'Tunisia', 'Turki', 'Turkmenistan', 'Tuvalu', 'Uganda',
         'Ukraina', 'Uni Emirat Arab', 'Uruguay', 'Uzbekistan', 'Vanuatu',
 
-        // https://id.wikipedia.org/wiki/Holy_See
+        // http://id.wikipedia.org/wiki/Holy_See
         'Vatikan',
 
         'Venezuela', 'Vietnam', 'Wallis dan Futuna', 'Wilayah Palestina',
 
-        // https://id.wikipedia.org/wiki/United_States_Virgin_Islands
+        // http://id.wikipedia.org/wiki/United_States_Virgin_Islands
         'Wilayah Samudra Hindia Britania',
 
         'Wilayah Selatan Perancis', 'Yaman', 'Yunani', 'Zambia', 'Zimbabwe'
     );
 
     /**
-     * @link https://id.wikipedia.org/wiki/Daftar_kabupaten_dan_kota_Indonesia#Daftar_kota
+     * @link http://id.wikipedia.org/wiki/Daftar_kabupaten_dan_kota_Indonesia#Daftar_kota
      */
     protected static $cityNames = array(
         "Administrasi Jakarta Barat", "Administrasi Jakarta Pusat",

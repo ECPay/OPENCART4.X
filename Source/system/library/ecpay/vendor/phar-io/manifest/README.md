@@ -1,6 +1,6 @@
 # Manifest
 
-Component for reading [phar.io](https://phar.io/) manifest information from a [PHP Archive (PHAR)](https://php.net/phar).
+Component for reading [phar.io](https://phar.io/) manifest information from a [PHP Archive (PHAR)](http://php.net/phar).
 
 [![Build Status](https://travis-ci.org/phar-io/manifest.svg?branch=master)](https://travis-ci.org/phar-io/manifest)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phar-io/manifest/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phar-io/manifest/?branch=master)

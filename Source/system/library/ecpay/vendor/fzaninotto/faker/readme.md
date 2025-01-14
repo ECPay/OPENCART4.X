@@ -7,7 +7,7 @@
 
 Faker is a PHP library that generates fake data for you. Whether you need to bootstrap your database, create good-looking XML documents, fill-in your persistence to stress test it, or anonymize data taken from a production service, Faker is for you.
 
-Faker is heavily inspired by Perl's [Data::Faker](https://search.cpan.org/~jasonk/Data-Faker-0.07/), and by ruby's [Faker](https://rubygems.org/gems/faker).
+Faker is heavily inspired by Perl's [Data::Faker](http://search.cpan.org/~jasonk/Data-Faker-0.07/), and by ruby's [Faker](https://rubygems.org/gems/faker).
 
 Faker requires PHP >= 5.3.3.
 
@@ -236,7 +236,7 @@ Methods accepting a `$timezone` argument default to `date_default_timezone_get()
     domainName              // 'wolffdeckow.net'
     domainWord              // 'feeney'
     tld                     // 'biz'
-    url                     // 'https://www.skilesdonnelly.biz/aut-accusantium-ut-architecto-sit-et.html'
+    url                     // 'http://www.skilesdonnelly.biz/aut-accusantium-ut-architecto-sit-et.html'
     slug                    // 'aut-repellat-commodi-vel-itaque-nihil-id-saepe-nostrum'
     ipv4                    // '109.133.32.252'
     localIpv4               // '10.242.58.8'
@@ -284,11 +284,11 @@ Methods accepting a `$timezone` argument default to `date_default_timezone_get()
 
 ### `Faker\Provider\Image`
 
-    // Image generation provided by LoremPixel (https://lorempixel.com/)
-    imageUrl($width = 640, $height = 480) // 'https://lorempixel.com/640/480/'
-    imageUrl($width, $height, 'cats')     // 'https://lorempixel.com/800/600/cats/'
-    imageUrl($width, $height, 'cats', true, 'Faker') // 'https://lorempixel.com/800/400/cats/Faker'
-    imageUrl($width, $height, 'cats', true, 'Faker', true) // 'https://lorempixel.com/gray/800/400/cats/Faker/' Monochrome image
+    // Image generation provided by LoremPixel (http://lorempixel.com/)
+    imageUrl($width = 640, $height = 480) // 'http://lorempixel.com/640/480/'
+    imageUrl($width, $height, 'cats')     // 'http://lorempixel.com/800/600/cats/'
+    imageUrl($width, $height, 'cats', true, 'Faker') // 'http://lorempixel.com/800/400/cats/Faker'
+    imageUrl($width, $height, 'cats', true, 'Faker', true) // 'http://lorempixel.com/gray/800/400/cats/Faker/' Monochrome image
     image($dir = '/tmp', $width = 640, $height = 480) // '/tmp/13b73edae8443990be1aa8f1a483bc27.jpg'
     image($dir, $width, $height, 'cats')  // 'tmp/13b73edae8443990be1aa8f1a483bc27.jpg' it's a cat!
     image($dir, $width, $height, 'cats', false) // '13b73edae8443990be1aa8f1a483bc27.jpg' it's a filename without path
@@ -426,7 +426,7 @@ You can check available Faker locales in the source code, [under the `Provider` 
 
 ## Populating Entities Using an ORM or an ODM
 
-Faker provides adapters for Object-Relational and Object-Document Mappers (currently, [Propel](https://www.propelorm.org), [Doctrine2](https://docs.doctrine-project.org/projects/doctrine-orm/en/latest/), [CakePHP](https://cakephp.org), [Spot2](https://github.com/vlucas/spot2), [Mandango](https://github.com/mandango/mandango) and [Eloquent](https://laravel.com/docs/master/eloquent) are supported). These adapters ease the population of databases through the Entity classes provided by an ORM library (or the population of document stores using Document classes provided by an ODM library).
+Faker provides adapters for Object-Relational and Object-Document Mappers (currently, [Propel](http://www.propelorm.org), [Doctrine2](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/), [CakePHP](http://cakephp.org), [Spot2](https://github.com/vlucas/spot2), [Mandango](https://github.com/mandango/mandango) and [Eloquent](https://laravel.com/docs/master/eloquent) are supported). These adapters ease the population of databases through the Entity classes provided by an ORM library (or the population of document stores using Document classes provided by an ODM library).
 
 To populate entities, create a new populator class (using a generator instance as parameter), then list the class and number of all the entities that must be generated. To launch the actual data population, call the `execute()` method.
 
@@ -1773,7 +1773,7 @@ echo $faker->VAT; //23456789
 * [`fzaninotto/company-name-generator`](https://github.com/fzaninotto/CompanyNameGenerator): Generate names for English tech companies with class
 * [`emanueleminotto/faker-placehold-it-provider`](https://github.com/EmanueleMinotto/PlaceholdItProvider): Generate images using placehold.it
 * [`spyrit/datalea`](https://github.com/spyrit/datalea) A highly customizable random test data generator web app
-* [`frequenc1/newage-ipsum`](https://github.com/frequenc1/newage-ipsum): A new aged ipsum provider for the faker library inspired by https://sebpearce.com/bullshit/
+* [`frequenc1/newage-ipsum`](https://github.com/frequenc1/newage-ipsum): A new aged ipsum provider for the faker library inspired by http://sebpearce.com/bullshit/
 * [`prewk/xml-faker`](https://github.com/prewk/xml-faker): Create fake XML with Faker
 * [`denheck/faker-context`](https://github.com/denheck/faker-context): Behat context using Faker to generate testdata
 * [`swekaj/cron-expression-generator`](https://github.com/swekaj/CronExpressionGenerator): Faker provider for generating random, valid cron expressions.
@@ -1787,9 +1787,9 @@ echo $faker->VAT; //23456789
 * [`jzonta/faker-restaurant`](https://github.com/jzonta/FakerRestaurant): Faker for Food and Beverage names generate
 * [`aalaap/faker-youtube`](https://github.com/aalaap/faker-youtube): Faker for YouTube URLs in various formats
 * [`pelmered/fake-car`](https://github.com/pelmered/fake-car): Faker for cars and car data
-* [`bluemmb/faker-picsum-photos-provider`](https://github.com/bluemmb/Faker-PicsumPhotos): Generate images using [picsum.photos](https://picsum.photos/)
+* [`bluemmb/faker-picsum-photos-provider`](https://github.com/bluemmb/Faker-PicsumPhotos): Generate images using [picsum.photos](http://picsum.photos/)
 * [`er1z/fakemock`](https://github.com/er1z/fakemock): Generate mocks using class-configuration and detection via Faker's guesser and Symfony asserts
-* [`xvladqt/faker-lorem-flickr`](https://github.com/xvladxtremal/Faker-LoremFlickr): Generate images using [loremflickr.com](https://loremflickr.com/)
+* [`xvladqt/faker-lorem-flickr`](https://github.com/xvladxtremal/Faker-LoremFlickr): Generate images using [loremflickr.com](http://loremflickr.com/)
 * [`metrakit/faker-eddy-malou`](https://github.com/Metrakit/faker-eddy-malou): Generate French Eddy Malou sentences & paragraphs
 * [`drupol/belgian-national-number-faker`](https://github.com/drupol/belgian-national-number-faker): Generate fake Belgian national numbers
 * [`elgentos/masquerade`](https://github.com/elgentos/masquerade): Configuration-based, platform-agnostic, locale-compatible data faker tool (out-of-the-box support for Magento 2)

@@ -36,8 +36,6 @@ class EcpayPayment extends \Opencart\System\Engine\Model {
 
         if ($this->cart->hasSubscription()) {
             $status = false;
-        } elseif (!$this->cart->hasShipping()) {
-            $status = false;
         } elseif (!$this->config->get('config_checkout_payment_address')) {
             $status = true;
         } elseif (!$this->config->get($this->setting_prefix . 'geo_zone_id')) {
@@ -72,7 +70,11 @@ class EcpayPayment extends \Opencart\System\Engine\Model {
                     'sort_order' => $this->config->get($this->setting_prefix . 'sort_order')
                 ];
 
-                $cart_total = (int)$this->cart->getTotal() + (int)$this->session->data['shipping_method']['cost'];
+                $cart_total = (int)$this->cart->getTotal();
+                if ($this->cart->hasShipping()) {
+                    $cart_total = $cart_total + (int)$this->session->data['shipping_method']['cost'];
+                }
+
                 // 判斷是否可選無卡分期
                 if ($cart_total < 3000) {
                     unset($method_data['option']['bnpl']);
@@ -90,10 +92,14 @@ class EcpayPayment extends \Opencart\System\Engine\Model {
                     unset($method_data['option']['dca']);
                 }
 
-                // 判斷是否可選貨到付款，運送方式必須是綠界物流
-                $shipping_method_code = $this->session->data['shipping_method']['code'];
-                $shipping_method_code = explode('.', $shipping_method_code);
-                if ($shipping_method_code[0] != 'ecpaylogistic') {
+                if ($this->cart->hasShipping()) {
+                    // 判斷是否可選貨到付款，運送方式必須是綠界物流
+                    $shipping_method_code = $this->session->data['shipping_method']['code'];
+                    $shipping_method_code = explode('.', $shipping_method_code);
+                    if ($shipping_method_code[0] != 'ecpaylogistic') {
+                        unset($method_data['option']['cod']);
+                    }
+                } else {
                     unset($method_data['option']['cod']);
                 }
             }

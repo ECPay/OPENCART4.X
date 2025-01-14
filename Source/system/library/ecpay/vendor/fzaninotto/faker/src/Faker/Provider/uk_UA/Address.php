@@ -259,7 +259,7 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-     * @see list of Ukraine street (2017-08-08), source: https://ukrexport.gov.ua/ukr/useful_info/gov/
+     * @see list of Ukraine street (2017-08-08), source: http://ukrexport.gov.ua/ukr/useful_info/gov/
      */
     protected static $street = array(
         'Тараса Шевченка',

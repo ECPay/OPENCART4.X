@@ -1,6 +1,6 @@
 # Change Log
 
-All notable changes to `sebastianbergmann/php-token-stream` are documented in this file using the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
+All notable changes to `sebastianbergmann/php-token-stream` are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 ## [4.0.4] - 2020-08-04
 

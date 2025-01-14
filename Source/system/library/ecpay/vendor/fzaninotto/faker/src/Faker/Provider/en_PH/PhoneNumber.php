@@ -4,7 +4,7 @@ namespace Faker\Provider\en_PH;
 
 class PhoneNumber extends \Faker\Provider\PhoneNumber
 {
-    // https://en.wikipedia.org/wiki/Telephone_numbers_in_the_Philippines
+    // http://en.wikipedia.org/wiki/Telephone_numbers_in_the_Philippines
     protected static $mobileFormats = array(
         '+63 (813) ###-####', '+63 (817) ###-####', '+63 (900) ###-####',
         '+63 (905) ###-####', '+63 (906) ###-####', '+63 (907) ###-####',

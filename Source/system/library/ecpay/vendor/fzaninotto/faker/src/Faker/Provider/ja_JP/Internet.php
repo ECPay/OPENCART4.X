@@ -24,7 +24,7 @@ class Internet extends \Faker\Provider\Internet
     );
 
     /**
-     * {@link} https://dic.nicovideo.jp/a/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%8B%97%E5%AD%97%28%E5%90%8D%E5%AD%97%29%E3%81%AE%E4%B8%80%E8%A6%A7
+     * {@link} http://dic.nicovideo.jp/a/%E6%97%A5%E6%9C%AC%E3%81%AE%E8%8B%97%E5%AD%97%28%E5%90%8D%E5%AD%97%29%E3%81%AE%E4%B8%80%E8%A6%A7
      */
     protected static $lastNameAscii = array(
         'aota', 'aoyama', 'ishida', 'idaka', 'ito', 'uno', 'ekoda', 'ogaki',
@@ -39,8 +39,8 @@ class Internet extends \Faker\Provider\Internet
     );
 
     /**
-     * {@link} https://dic.nicovideo.jp/a/%E6%97%A5%E6%9C%AC%E4%BA%BA%E3%81%AE%E5%90%8D%E5%89%8D%E4%B8%80%E8%A6%A7
-     * {@link} https://www.meijiyasuda.co.jp/enjoy/ranking/
+     * {@link} http://dic.nicovideo.jp/a/%E6%97%A5%E6%9C%AC%E4%BA%BA%E3%81%AE%E5%90%8D%E5%89%8D%E4%B8%80%E8%A6%A7
+     * {@link} http://www.meijiyasuda.co.jp/enjoy/ranking/
      */
     protected static $firstNameAscii = array(
         'akira', 'atsushi', 'osamu',

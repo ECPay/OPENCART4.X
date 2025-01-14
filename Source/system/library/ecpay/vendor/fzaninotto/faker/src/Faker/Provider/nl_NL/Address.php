@@ -59,7 +59,7 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-    * Export of BAG (https://bag.vrom.nl/)
+    * Export of BAG (http://bag.vrom.nl/)
     * last updated 2012/11/09
     *
     * @var array

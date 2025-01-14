@@ -7,7 +7,7 @@ class Payment extends \Faker\Provider\Payment
     /**
      * International Bank Account Number (IBAN).
      *
-     * @link https://en.wikipedia.org/wiki/International_Bank_Account_Number
+     * @link http://en.wikipedia.org/wiki/International_Bank_Account_Number
      *
      * @param string $prefix      for generating bank account number of a specific bank
      * @param string $countryCode ISO 3166-1 alpha-2 country code
@@ -22,7 +22,7 @@ class Payment extends \Faker\Provider\Payment
 
     /**
      * @var array Cyprus banks
-     * @link https://www.acb.com.cy/cgibin/hweb?-A=206&-V=membership
+     * @link http://www.acb.com.cy/cgibin/hweb?-A=206&-V=membership
      */
     protected static $banks = array(
         'Τράπεζα Κύπρου',

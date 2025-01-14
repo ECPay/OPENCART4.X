@@ -79,7 +79,7 @@ class Address extends \Faker\Provider\Address
     );
 
     /**
-     * Source: https://aplikace.mvcr.cz/adresy/
+     * Source: http://aplikace.mvcr.cz/adresy/
      */
     protected static $street = array(
         'Alžírská', 'Angelovova', 'Antonínská', 'Arménská', 'Čelkovická', 'Červenkova', 'Československého exilu',

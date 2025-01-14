@@ -17,21 +17,21 @@ interface Driver
     /**
      * @var int
      *
-     * @see https://xdebug.org/docs/code_coverage
+     * @see http://xdebug.org/docs/code_coverage
      */
     public const LINE_EXECUTED = 1;
 
     /**
      * @var int
      *
-     * @see https://xdebug.org/docs/code_coverage
+     * @see http://xdebug.org/docs/code_coverage
      */
     public const LINE_NOT_EXECUTED = -1;
 
     /**
      * @var int
      *
-     * @see https://xdebug.org/docs/code_coverage
+     * @see http://xdebug.org/docs/code_coverage
      */
     public const LINE_NOT_EXECUTABLE = -2;
 

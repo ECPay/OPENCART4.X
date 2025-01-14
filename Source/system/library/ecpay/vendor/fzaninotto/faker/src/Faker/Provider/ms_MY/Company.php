@@ -14,7 +14,7 @@ class Company extends \Faker\Provider\Company
     /**
      * There are more Private Limited Companies(Sdn Bhd) than Public Listed Companies(Berhad)
      *
-     * @link https://www.risscorporateservices.com/types-of-business-entities.html
+     * @link http://www.risscorporateservices.com/types-of-business-entities.html
      */
     protected static $companySuffix = array(
         'Berhad',
@@ -55,7 +55,7 @@ class Company extends \Faker\Provider\Company
     );
 
     /**
-     * @link https://www.daftarsyarikat.biz/perkhidmatan-dan-konsultasi/pendaftaran-lesen-kementerian-kewangan/senarai-kod-bidang/
+     * @link http://www.daftarsyarikat.biz/perkhidmatan-dan-konsultasi/pendaftaran-lesen-kementerian-kewangan/senarai-kod-bidang/
      */
     protected static $industry = array(
         'Agen Pengembaraan','Agen Penghantaran','Agen Perkapalan','Agensi Kredit Dan Pemfaktoran','Air','Akseso Kenderaan','Aksesori','Aksesori Jentera Berat','Aksesori Penghubung Dan Telekomunikasi','Aksesori Senjata Api','Akuatik','Akustik Dan Gelombang','Alat Forensik Dan Aksesori','Alat Gani','Alat Ganti','Alat Ganti Dan Kelengkapan Bot','Alat Hawa Dingin','Alat Hawa Dingin Kenderaan','Alat Kebombaan','Alat Kelengkapan Perubatan','Alat Keselamatan, Perlindungan Dan Kawalan Perlindungan Dan Kawalan','Alat Muzik Dan Aksesori','Alat Muzik, Kesenian dan Aksesori','Alat Penghasil Nyalaan','Alat penyelamat','Alat Penyimpan Tenaga Dan Aksesori','Alat Perhubungan','Alat Semboyan','Alat-Alat Marin','Alatganti Dan Kelengkapan Pesawat','Alatulis','Animation','Anti Kakis','Artis Dan Penghibur Profesional','Audio Visual',

@@ -218,7 +218,7 @@ class Payment extends Base
     /**
      * International Bank Account Number (IBAN)
      *
-     * @link https://en.wikipedia.org/wiki/International_Bank_Account_Number
+     * @link http://en.wikipedia.org/wiki/International_Bank_Account_Number
      * @param  string  $countryCode ISO 3166-1 alpha-2 country code
      * @param  string  $prefix      for generating bank account number of a specific bank
      * @param  integer $length      total length without country code and 2 check digits
@@ -276,7 +276,7 @@ class Payment extends Base
      * Return the String of a SWIFT/BIC number
      *
      * @example 'RZTIAT22263'
-     * @link    https://en.wikipedia.org/wiki/ISO_9362
+     * @link    http://en.wikipedia.org/wiki/ISO_9362
      * @return  string Swift/Bic number
      */
     public static function swiftBicNumber()

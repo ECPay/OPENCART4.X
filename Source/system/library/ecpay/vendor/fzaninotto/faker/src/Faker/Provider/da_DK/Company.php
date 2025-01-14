@@ -35,14 +35,14 @@ class Company extends \Faker\Provider\Company
     protected static $companySuffix = array('ApS', 'A/S', 'I/S', 'K/S');
 
     /**
-     * @link https://cvr.dk/Site/Forms/CMS/DisplayPage.aspx?pageid=60
+     * @link http://cvr.dk/Site/Forms/CMS/DisplayPage.aspx?pageid=60
      *
      * @var string CVR number format.
      */
     protected static $cvrFormat = '%#######';
 
     /**
-     * @link https://cvr.dk/Site/Forms/CMS/DisplayPage.aspx?pageid=60
+     * @link http://cvr.dk/Site/Forms/CMS/DisplayPage.aspx?pageid=60
      *
      * @var string P number (production number) format.
      */

@@ -65,4 +65,4 @@ favour of this package.
 .. _CONTRIBUTING.md: CONTRIBUTING.md
 .. _ocramius/instantiator: https://github.com/Ocramius/Instantiator
 .. _Doctrine Coding Standard: https://github.com/doctrine/coding-standard
-.. _object calisthenics: https://www.slideshare.net/guilhermeblanco/object-calisthenics-applied-to-php
+.. _object calisthenics: http://www.slideshare.net/guilhermeblanco/object-calisthenics-applied-to-php

@@ -150,7 +150,7 @@ final class Runtime
     {
         if ($this->isHHVM()) {
             // @codeCoverageIgnoreStart
-            return 'https://hhvm.com/';
+            return 'http://hhvm.com/';
             // @codeCoverageIgnoreEnd
         }
 

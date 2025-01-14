@@ -3,8 +3,8 @@
 namespace Faker\Provider;
 
 /**
- * @see https://en.wikipedia.org/wiki/EAN-13
- * @see https://en.wikipedia.org/wiki/ISBN
+ * @see http://en.wikipedia.org/wiki/EAN-13
+ * @see http://en.wikipedia.org/wiki/ISBN
  */
 class Barcode extends Base
 {
@@ -34,7 +34,7 @@ class Barcode extends Base
 
     /**
      * ISBN-10 check digit
-     * @link https://en.wikipedia.org/wiki/International_Standard_Book_Number#ISBN-10_check_digits
+     * @link http://en.wikipedia.org/wiki/International_Standard_Book_Number#ISBN-10_check_digits
      *
      * @param  string           $input ISBN without check-digit
      * @throws \LengthException When wrong input length passed
@@ -86,7 +86,7 @@ class Barcode extends Base
 
     /**
      * Get a random ISBN-10 code
-     * @link https://en.wikipedia.org/wiki/International_Standard_Book_Number
+     * @link http://en.wikipedia.org/wiki/International_Standard_Book_Number
      *
      * @return string
      * @example '4881416324'
@@ -100,7 +100,7 @@ class Barcode extends Base
 
     /**
      * Get a random ISBN-13 code
-     * @link https://en.wikipedia.org/wiki/International_Standard_Book_Number
+     * @link http://en.wikipedia.org/wiki/International_Standard_Book_Number
      *
      * @return string
      * @example '9790404436093'

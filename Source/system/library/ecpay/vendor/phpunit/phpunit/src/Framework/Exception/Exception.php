@@ -33,7 +33,7 @@ use Throwable;
  * connections). Unserializing user-space objects from the child process into
  * the parent would break the intended encapsulation of process isolation.
  *
- * @see https://fabien.potencier.org/article/9/php-serialization-stack-traces-and-exceptions
+ * @see http://fabien.potencier.org/article/9/php-serialization-stack-traces-and-exceptions
  *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */

@@ -79,7 +79,7 @@ class PhoneNumber extends \Faker\Provider\PhoneNumber
     /**
      * Only 073 to 079 are acceptable prefixes with 07
      *
-     * @see https://www.arcep.fr/index.php?id=8146
+     * @see http://www.arcep.fr/index.php?id=8146
      */
     public function phoneNumber07WithSeparator()
     {

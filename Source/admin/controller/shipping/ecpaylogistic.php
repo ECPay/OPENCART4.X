@@ -632,47 +632,50 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 		$create_shipping_flag = true ;
 		$order_info = $this->model_sale_order->getOrder($data['order_id']);
 
-		// 判斷物流方式
-		$shipping_method_array = explode('.', $order_info['shipping_method']['code']);
-		if ($shipping_method_array[0] !== 'ecpaylogistic') {
-			$create_shipping_flag = false ;
-		}
+		// 訂單沒有物流方式時不繼續
+		if (isset($order_info['shipping_method']['code']) && $order_info['shipping_method']['code'] != '') {
+			// 判斷物流方式
+			$shipping_method_array = explode('.', $order_info['shipping_method']['code']);
+			if ($shipping_method_array[0] !== 'ecpaylogistic') {
+				$create_shipping_flag = false ;
+			}
 
-		// 物流類型
-		$logisticSubType = $shipping_method_array[1];
-		$logisticsType = $this->helper->get_ecpay_logistics_type($logisticSubType);
+			// 物流類型
+			$logisticSubType = $shipping_method_array[1];
+			$logisticsType = $this->helper->get_ecpay_logistics_type($logisticSubType);
 
-		// 判斷物流狀態
-		$ecpaylogistic_query = $this->db->query('Select * from ' . DB_PREFIX.'ecpaylogistic_response where order_id='.(int)$data['order_id']);
+			// 判斷物流狀態
+			$ecpaylogistic_query = $this->db->query('Select * from ' . DB_PREFIX.'ecpaylogistic_response where order_id='.(int)$data['order_id']);
 
-		// 已經建立過物流訂單
-		if ($ecpaylogistic_query->num_rows) {
-			$create_shipping_flag = false ;
-		}
+			// 已經建立過物流訂單
+			if ($ecpaylogistic_query->num_rows) {
+				$create_shipping_flag = false ;
+			}
 
-		// 顯示建立按鈕
-		if ($create_shipping_flag) {
-			$create_shipping_order_url = $this->url->link(
-				$this->extension_route .'/'. $this->module_name . $this->separator . 'create_shipping_order',
-				'user_token=' . $token . '&order_id=' . $data['order_id'],
-				$this->url_secure
-			);
+			// 顯示建立按鈕
+			if ($create_shipping_flag) {
+				$create_shipping_order_url = $this->url->link(
+					$this->extension_route .'/'. $this->module_name . $this->separator . 'create_shipping_order',
+					'user_token=' . $token . '&order_id=' . $data['order_id'],
+					$this->url_secure
+				);
 
-			// 建立物流訂單按鈕
-			$data['shipping_method'] .= '<a href="' . $create_shipping_order_url . '" id="ecpaylogistic" class="btn btn-primary btn-xs mx-2">建立物流訂單</a>';
+				// 建立物流訂單按鈕
+				$data['shipping_method'] .= '<a href="' . $create_shipping_order_url . '" id="ecpaylogistic" class="btn btn-primary btn-xs mx-2">建立物流訂單</a>';
 
-			if ($logisticSubType !== 'post' && $logisticSubType !== 'tcat') {
-				// 變更門市按鈕
-				$map_form = $this->express_map($data['order_id']);
-				$data['shipping_method'] .= '<input type="button" onclick="changeStore()" class="btn btn-primary btn-xs mx-2" value="變更門市" />' . $map_form . '<script>function changeStore() {
-				const ecpay_map_window = window.open("","ecpay_map_target",config="height=790px,width=1020px");
-				document.getElementById("ecpay-form").submit();
-				const ecpay_map_listener = setInterval(() => {
-					if (ecpay_map_window && ecpay_map_window.closed){
-						clearInterval(ecpay_map_listener);
-						location.reload();
-					}
-				}, 500);}</script>';
+				if ($logisticSubType !== 'post' && $logisticSubType !== 'tcat') {
+					// 變更門市按鈕
+					$map_form = $this->express_map($data['order_id']);
+					$data['shipping_method'] .= '<input type="button" onclick="changeStore()" class="btn btn-primary btn-xs mx-2" value="變更門市" />' . $map_form . '<script>function changeStore() {
+					const ecpay_map_window = window.open("","ecpay_map_target",config="height=790px,width=1020px");
+					document.getElementById("ecpay-form").submit();
+					const ecpay_map_listener = setInterval(() => {
+						if (ecpay_map_window && ecpay_map_window.closed){
+							clearInterval(ecpay_map_listener);
+							location.reload();
+						}
+					}, 500);}</script>';
+				}
 			}
 		}
 	}
@@ -688,71 +691,74 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 
         $orderInfo = $this->model_sale_order->getOrder($data['order_id']);
 
-        // 判斷物流方式
-		$shipping_method_array = explode('.', $orderInfo['shipping_method']['code']);
-		if ($shipping_method_array[0] !== 'ecpaylogistic') {
-        	$print_logistic_flag = false;
-        }
-
-        // 判斷物流狀態
-        $ecpaylogistic_query = $this->db->query('Select * from ' . DB_PREFIX . 'ecpaylogistic_response where order_id=' . (int)$data['order_id']);
-
-		 // 尚未建立過物流訂單
-        if ($ecpaylogistic_query->num_rows === 0) {
-        	$print_logistic_flag = false ;
-        }
-
-        // 顯示列印按鈕
-        if ($print_logistic_flag) {
-			$ecpaylogisticSetting = $this->get_logistic_settings();
-			$inputPrint = array();
-
-			$apiLogisticInfo  = $this->helper->get_ecpay_logistic_api_info('print', $ecpaylogistic_query->row['LogisticsSubType'], $ecpaylogisticSetting);
-
-			$factory = new Factory([
-				'hashKey'       => $apiLogisticInfo['hashKey'],
-				'hashIv'        => $apiLogisticInfo['hashIv'],
-				'hashMethod'    => 'md5',
-			]);
-
-			$inputPrint = array(
-				'MerchantID' => $apiLogisticInfo['merchantId'],
-				'AllPayLogisticsID' => $ecpaylogistic_query->row['AllPayLogisticsID'],
-				'PlatformID' => ''
-			);
-
-			switch ($ecpaylogistic_query->row['LogisticsSubType']) {
-				case 'FAMIC2C':
-				case 'HILIFEC2C':
-				case 'OKMARTC2C':
-					try {
-						$inputPrint['CVSPaymentNo'] = $ecpaylogistic_query->row['CVSPaymentNo'];
-					} catch(Exception $e) {
-						echo $e->getMessage();
-					}
-					break;
-				case 'UNIMARTC2C':
-					try {
-						$inputPrint['CVSPaymentNo'] = $ecpaylogistic_query->row['CVSPaymentNo'];
-						$inputPrint['CVSValidationNo'] = $ecpaylogistic_query->row['CVSValidationNo'];
-					} catch(Exception $e) {
-						echo $e->getMessage();
-					}
-					break;
-				case 'FAMI':
-				case 'UNIMART':
-				case 'HILIFE':
-					break;
+		// 訂單沒有物流方式時不繼續
+		if (isset($orderInfo['shipping_method']['code']) && $orderInfo['shipping_method']['code'] != '') {
+			// 判斷物流方式
+			$shipping_method_array = explode('.', $orderInfo['shipping_method']['code']);
+			if ($shipping_method_array[0] !== 'ecpaylogistic') {
+				$print_logistic_flag = false;
 			}
 
-			$autoSubmitFormService = $factory->create('AutoSubmitFormWithCmvService');
-			$form_print =  $autoSubmitFormService->generate($inputPrint, $apiLogisticInfo['action'], '_Blank','ecpay_print');
+			// 判斷物流狀態
+			$ecpaylogistic_query = $this->db->query('Select * from ' . DB_PREFIX . 'ecpaylogistic_response where order_id=' . (int)$data['order_id']);
 
-			$form_print =  str_replace('<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>', '', $form_print);
-			$form_print =  str_replace('</body></html>', '', $form_print);
-			$form_print =  str_replace('<script type="text/javascript">document.getElementById("ecpay_print").submit();</script>', '', $form_print);
+			 // 尚未建立過物流訂單
+			if ($ecpaylogistic_query->num_rows === 0) {
+				$print_logistic_flag = false ;
+			}
 
-			$data['shipping_method'] .= "&nbsp;" . '<input type="button" id="ecpaylogistic_print" class="btn btn-primary btn-xs" onclick="document.getElementById(\'ecpay_print\').submit()" id="ecpaylogistic_print" value="列印物流單" />' . $form_print;
+			// 顯示列印按鈕
+			if ($print_logistic_flag) {
+				$ecpaylogisticSetting = $this->get_logistic_settings();
+				$inputPrint = array();
+
+				$apiLogisticInfo  = $this->helper->get_ecpay_logistic_api_info('print', $ecpaylogistic_query->row['LogisticsSubType'], $ecpaylogisticSetting);
+
+				$factory = new Factory([
+					'hashKey'       => $apiLogisticInfo['hashKey'],
+					'hashIv'        => $apiLogisticInfo['hashIv'],
+					'hashMethod'    => 'md5',
+				]);
+
+				$inputPrint = array(
+					'MerchantID' => $apiLogisticInfo['merchantId'],
+					'AllPayLogisticsID' => $ecpaylogistic_query->row['AllPayLogisticsID'],
+					'PlatformID' => ''
+				);
+
+				switch ($ecpaylogistic_query->row['LogisticsSubType']) {
+					case 'FAMIC2C':
+					case 'HILIFEC2C':
+					case 'OKMARTC2C':
+						try {
+							$inputPrint['CVSPaymentNo'] = $ecpaylogistic_query->row['CVSPaymentNo'];
+						} catch(Exception $e) {
+							echo $e->getMessage();
+						}
+						break;
+					case 'UNIMARTC2C':
+						try {
+							$inputPrint['CVSPaymentNo'] = $ecpaylogistic_query->row['CVSPaymentNo'];
+							$inputPrint['CVSValidationNo'] = $ecpaylogistic_query->row['CVSValidationNo'];
+						} catch(Exception $e) {
+							echo $e->getMessage();
+						}
+						break;
+					case 'FAMI':
+					case 'UNIMART':
+					case 'HILIFE':
+						break;
+				}
+
+				$autoSubmitFormService = $factory->create('AutoSubmitFormWithCmvService');
+				$form_print =  $autoSubmitFormService->generate($inputPrint, $apiLogisticInfo['action'], '_Blank','ecpay_print');
+
+				$form_print =  str_replace('<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>', '', $form_print);
+				$form_print =  str_replace('</body></html>', '', $form_print);
+				$form_print =  str_replace('<script type="text/javascript">document.getElementById("ecpay_print").submit();</script>', '', $form_print);
+
+				$data['shipping_method'] .= "&nbsp;" . '<input type="button" id="ecpaylogistic_print" class="btn btn-primary btn-xs" onclick="document.getElementById(\'ecpay_print\').submit()" id="ecpaylogistic_print" value="列印物流單" />' . $form_print;
+			}
 		}
 	}
 
@@ -806,7 +812,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 			'hashKey' => $apiLogisticInfo['hashKey'],
 			'hashIv'  => $apiLogisticInfo['hashIv']
 		]);
-		
+
 		$aes_service = $factory->create(AesService::class);
 		$encrypt_data = $aes_service->encrypt(['order_id' => $order_id]);
 

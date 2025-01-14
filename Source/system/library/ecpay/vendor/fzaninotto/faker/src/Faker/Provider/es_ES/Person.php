@@ -27,8 +27,8 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * {@link} https://www.ine.es/daco/daco42/nombyapel/nombyapel.htm
-     * {@link} https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177009&menu=ultiDatos&idp=1254734710990
+     * {@link} http://www.ine.es/daco/daco42/nombyapel/nombyapel.htm
+     * {@link} http://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177009&menu=ultiDatos&idp=1254734710990
      * Manually added accent marks because the source lacks of them
      */
     protected static $firstNameMale = array(

@@ -78,7 +78,7 @@ class Person extends \Faker\Provider\Person
     /**
      * @link https://en.wikipedia.org/wiki/List_of_Malay_people
      * @link https://samttar.edu.my/senarai-nama-pelajar-2016/
-     * @link https://smkspkl.edu.my/senarai-nama-pelajar
+     * @link http://smkspkl.edu.my/senarai-nama-pelajar
      */
     protected static $firstNameMaleMalay = array(
         'A','A.r','A\'fif','A\'zizul','Ab','Abadi','Abas','Abd','Abd.','Abd.rahim','Abdel','Abdul','Abdull','Abdullah','Abdulloh','Abu','Adam','Adi','Adib','Adil','Adnan','Ady','Adzmin','Afandy','Afif','Afiq','Afza','Agus','Ahmad','Ahmat','Ahmed','Ahwali','Ahyer','Aidid','Aidil','Aiman','Aimman','Ainol','Ainuddin','Ainul','Aizad','Aizam','Aizat','Aizuddin','Ajis','Ajmal','Ajwad','Akhmal','Akid','Akif','Akmal','Al','Al-afnan','Al-muazrar','Alfian','Ali','Alias','Alif','Aliff','Alilah','Alin','Allif','Amaanullah','Amami','Aman','Amar','Ameershah','Amier','Amierul','Amil','Amin','Aminuddin','Amir','Amiruddin','Amirul','Ammar','Amran','Amri','Amru','Amrullah','Amsyar','Anas','Andri','Aniq','Anuar','Anuwar','Anwar','Aqeel','Aqif','Aqil','Arash','Arbani','Arefin','Arief','Arif','Arifen','Ariff','Ariffin','Arifin','Armi','Ashraf','Ashraff','Ashrof','Ashrul','Aslam','Asmawi','Asmin','Asmuri','Asraf','Asri','Asrialif','Asror','Asrul','Asymawi','Asyraaf','Asyraf','Atan','Athari','Awaludin','Awira','Azam','Azely','Azfar','Azhan','Azhar','Azhari','Azib','Azim','Aziz','Azizan','Azizul','Azizulhasni','Azlan','Azlee','Azli','Azman','Azmi','Azmie','Azmin','Aznan','Aznizam','Azraai','Azri','Azrie','Azrien','Azril','Azrin','Azrul','Azry','Azuan',

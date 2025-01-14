@@ -236,7 +236,7 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * @link https://www.horoskopai.lt/gaires/populiariausios-pavardes-lietuvoje/
+     * @link http://www.horoskopai.lt/gaires/populiariausios-pavardes-lietuvoje/
      */
     protected static $lastNameMale = array(
         'Kazlaukas', 'Jankauskas', 'Petrauskas', 'Stankevičius', 'Vasiliauskas', 'Žukauskas', 'Butkus',
@@ -244,7 +244,7 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * @link https://www.horoskopai.lt/gaires/populiariausios-pavardes-lietuvoje/
+     * @link http://www.horoskopai.lt/gaires/populiariausios-pavardes-lietuvoje/
      */
     protected static $lastNameFemale = array(
         'Kazlauskienė', 'Jankauskienė', 'Petrauskienė', 'Stankevičienė', 'Vasiliauskienė', 'Paulauskienė',

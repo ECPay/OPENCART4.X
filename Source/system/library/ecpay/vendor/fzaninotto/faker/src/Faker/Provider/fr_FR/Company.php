@@ -107,7 +107,7 @@ class Company extends \Faker\Provider\Company
     /**
      * Generates a siret number (14 digits) that passes the Luhn check.
      *
-     * @see https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'identification_du_r%C3%A9pertoire_des_%C3%A9tablissements
+     * @see http://fr.wikipedia.org/wiki/Syst%C3%A8me_d'identification_du_r%C3%A9pertoire_des_%C3%A9tablissements
      * @return string
      */
     public function siret($formatted = true)
@@ -126,7 +126,7 @@ class Company extends \Faker\Provider\Company
     /**
      * Generates a siren number (9 digits) that passes the Luhn check.
      *
-     * @see https://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27identification_du_r%C3%A9pertoire_des_entreprises
+     * @see http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27identification_du_r%C3%A9pertoire_des_entreprises
      * @return string
      */
     public static function siren($formatted = true)
@@ -168,7 +168,7 @@ class Company extends \Faker\Provider\Company
     }
 
     /**
-     * @link https://www.pole-emploi.fr/candidat/le-code-rome-et-les-fiches-metiers-@/article.jspz?id=60702
+     * @link http://www.pole-emploi.fr/candidat/le-code-rome-et-les-fiches-metiers-@/article.jspz?id=60702
      * @note Randomly took 300 from this list
      */
     protected static $jobTitleFormat = array(

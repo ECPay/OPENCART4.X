@@ -59,7 +59,7 @@ $myCopy = clone $myObject;
 
 - How do you create **deep** copies of your objects (i.e. copying also all the objects referenced in the properties)?
 
-You use [`__clone()`](https://www.php.net/manual/en/language.oop5.cloning.php#object.clone) and implement the behavior
+You use [`__clone()`](http://www.php.net/manual/en/language.oop5.cloning.php#object.clone) and implement the behavior
 yourself.
 
 - But how do you handle **cycles** in the association graph?
@@ -171,7 +171,7 @@ $matcher = new PropertyMatcher('MyClass', 'id');
 #### Type
 
 The `TypeMatcher` will match any element by its type (instance of a class or any value that could be parameter of
-[gettype()](https://php.net/manual/en/function.gettype.php) function):
+[gettype()](http://php.net/manual/en/function.gettype.php) function):
 
 ```php
 use DeepCopy\TypeMatcher\TypeMatcher;

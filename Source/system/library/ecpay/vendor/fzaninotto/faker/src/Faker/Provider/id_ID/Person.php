@@ -28,7 +28,7 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * @link https://www.nama.web.id/search.php?gender=male&origin=Indonesia+-+Jawa&letter=&submit=Search
+     * @link http://www.nama.web.id/search.php?gender=male&origin=Indonesia+-+Jawa&letter=&submit=Search
      */
     protected static $firstNameMale = array(
         'Abyasa', 'Ade', 'Adhiarja', 'Adiarja', 'Adika', 'Adikara', 'Adinata',
@@ -105,7 +105,7 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * @link https://namafb.com/2010/08/12/top-1000-nama-populer-indonesia/
+     * @link http://namafb.com/2010/08/12/top-1000-nama-populer-indonesia/
      */
     protected static $firstNameFemale = array(
         'Ade', 'Agnes', 'Ajeng', 'Amalia', 'Anita', 'Ayu', 'Aisyah', 'Ana',
@@ -141,8 +141,8 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * @link https://namafb.com/2010/08/12/top-1000-nama-populer-indonesia/
-     * @link https://id.wikipedia.org/wiki/Daftar_marga_suku_Batak_di_Toba
+     * @link http://namafb.com/2010/08/12/top-1000-nama-populer-indonesia/
+     * @link http://id.wikipedia.org/wiki/Daftar_marga_suku_Batak_di_Toba
      */
     protected static $lastNameMale = array(
         'Adriansyah', 'Ardianto', 'Anggriawan', 'Budiman', 'Budiyanto',
@@ -166,7 +166,7 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * @link https://namafb.com/2010/08/12/top-1000-nama-populer-indonesia/
+     * @link http://namafb.com/2010/08/12/top-1000-nama-populer-indonesia/
      */
     protected static $lastNameFemale = array(
         'Agustina', 'Andriani', 'Anggraini', 'Aryani', 'Astuti',
@@ -184,17 +184,17 @@ class Person extends \Faker\Provider\Person
     );
 
     /**
-     * @link https://id.wikipedia.org/wiki/Gelar_akademik
+     * @link http://id.wikipedia.org/wiki/Gelar_akademik
      */
     protected static $titleMale = array('dr.', 'drg.', 'Dr.', 'Drs.', 'Ir.', 'H.');
 
     /**
-     * @link https://id.wikipedia.org/wiki/Gelar_akademik
+     * @link http://id.wikipedia.org/wiki/Gelar_akademik
      */
     protected static $titleFemale = array('dr.', 'drg.', 'Dr.', 'Hj.');
 
     /**
-     * @link https://informasipedia.com/wilayah-indonesia/daftar-kabupaten-kota-di-indonesia/
+     * @link http://informasipedia.com/wilayah-indonesia/daftar-kabupaten-kota-di-indonesia/
      */
     protected static $birthPlaceCode = array(
         '1101', '1102', '1103', '1104', '1105', '1106', '1107', '1108', '1109', '1110', '1111', '1112', '1113', '1114', '1115', '1116',
@@ -233,7 +233,7 @@ class Person extends \Faker\Provider\Person
 
      /**
      * For academic title
-     * @link https://id.wikipedia.org/wiki/Gelar_akademik
+     * @link http://id.wikipedia.org/wiki/Gelar_akademik
      */
     private static $suffix = array('S.Ked', 'S.Gz', 'S.Pt', 'S.IP', 'S.E.I',
         'S.E.', 'S.Kom', 'S.H.', 'S.T.', 'S.Pd', 'S.Psi', 'S.I.Kom',
@@ -334,7 +334,7 @@ class Person extends \Faker\Provider\Person
      * Generates birth place code for NIK
      *
      * @link https://id.wikipedia.org/wiki/Nomor_Induk_Kependudukan
-     * @link https://informasipedia.com/wilayah-indonesia/daftar-kabupaten-kota-di-indonesia/
+     * @link http://informasipedia.com/wilayah-indonesia/daftar-kabupaten-kota-di-indonesia/
      */
     protected function birthPlaceCode()
     {

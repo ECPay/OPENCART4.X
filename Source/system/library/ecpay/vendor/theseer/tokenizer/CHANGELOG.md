@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Tokenizer are documented in this file using the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
+All notable changes to Tokenizer are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
 
 ## [1.2.1] - 2021-07-28

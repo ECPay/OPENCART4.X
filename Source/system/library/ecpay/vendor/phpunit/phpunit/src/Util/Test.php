@@ -905,12 +905,12 @@ final class Test
      *
      * This implementation is copied from https://github.com/zendframework/zend-stdlib/blob/76b653c5e99b40eccf5966e3122c90615134ae46/src/ArrayUtils.php
      *
-     * Zend Framework (https://framework.zend.com/)
+     * Zend Framework (http://framework.zend.com/)
      *
-     * @see      https://github.com/zendframework/zf2 for the canonical source repository
+     * @see      http://github.com/zendframework/zf2 for the canonical source repository
      *
-     * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (https://www.zend.com)
-     * @license   https://framework.zend.com/license/new-bsd New BSD License
+     * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+     * @license   http://framework.zend.com/license/new-bsd New BSD License
      */
     private static function mergeArraysRecursively(array $a, array $b): array
     {
