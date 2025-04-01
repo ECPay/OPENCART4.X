@@ -3,8 +3,9 @@ namespace Opencart\Admin\Controller\Extension\Ecpay\Module;
 
 use Ecpay\Sdk\Factories\Factory;
 
-class EcpayInvoice extends \Opencart\System\Engine\Controller {
-    private $error           = array();
+class EcpayInvoice extends \Opencart\System\Engine\Controller
+{
+    private $error           = [];
     private $separator       = '';
     private $module_name     = 'ecpayinvoice';
     private $module_path     = '';
@@ -15,17 +16,18 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
     private $module_code     = '';
     private $extension_route = 'marketplace/extension';
     private $url_secure      = true;
-    private $validate_fields = array(
+    private $validate_fields = [
         'mid',
         'hashkey',
         'hashiv',
-    );
+    ];
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
 
         require_once DIR_EXTENSION . 'ecpay/system/library/EcpayInvoiceHelper.php';
-        $this->helper = new \Opencart\System\Library\EcpayInvoiceHelper;
+        $this->helper = new \Opencart\System\Library\EcpayInvoiceHelper($this->registry);
 
         if (VERSION >= '4.0.2.0') {
             $this->separator = '.';
@@ -42,7 +44,8 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         $this->setting_prefix = 'module_' . $this->module_name . '_';
     }
 
-    public function index() {
+    public function index()
+    {
         $this->load->language($this->module_path);
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('setting/setting');
@@ -62,19 +65,19 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         $data['text_disabled']  = $this->language->get('text_disabled');
         $data['text_autoissue'] = $this->language->get('text_autoissue');
 
-        $data['entry_mid']       = $this->language->get('entry_mid');
-        $data['entry_hashkey']   = $this->language->get('entry_hashkey');
-        $data['entry_hashiv']    = $this->language->get('entry_hashiv');
-        $data['entry_test_mode'] = $this->language->get('entry_test_mode');
+        $data['entry_mid']            = $this->language->get('entry_mid');
+        $data['entry_hashkey']        = $this->language->get('entry_hashkey');
+        $data['entry_hashiv']         = $this->language->get('entry_hashiv');
+        $data['entry_test_mode']      = $this->language->get('entry_test_mode');
         $data['entry_test_mode_info'] = $this->language->get('entry_test_mode_info');
-        $data['entry_autoissue'] = $this->language->get('entry_autoissue');
-        $data['entry_status']    = $this->language->get('entry_status');
+        $data['entry_autoissue']      = $this->language->get('entry_autoissue');
+        $data['entry_status']         = $this->language->get('entry_status');
 
         $data['button_save']   = $this->language->get('button_save');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
         // Get ECPay translations
-        $translation_names = array(
+        $translation_names = [
             'text_edit',
             'text_autoissue',
 
@@ -84,7 +87,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
             'entry_hashiv',
             'entry_test_mode',
             'entry_autoissue',
-        );
+        ];
         foreach ($translation_names as $name) {
             $data[$name] = $this->language->get($name);
         }
@@ -96,11 +99,11 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
             $data['error_warning'] = '';
         }
 
-        $ecpayErrorList = array(
+        $ecpayErrorList = [
             'mid',
             'hashkey',
             'hashiv',
-        );
+        ];
         foreach ($ecpayErrorList as $errorName) {
             if (isset($this->error[$errorName])) {
                 $data['error_' . $errorName] = $this->error[$errorName];
@@ -110,54 +113,54 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         }
         unset($ecpayErrorList);
 
-        $data['breadcrumbs']   = array();
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs']   = [];
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/dashboard', 'user_token=' . $token, $this->url_secure),
-        );
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_extension'),
             'href' => $this->url->link($this->extension_route, 'user_token=' . $token . '&type=module', $this->url_secure),
-        );
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
             'href' => $this->url->link($this->module_path, 'user_token=' . $token, $this->url_secure),
-        );
+        ];
 
-        $data[$this->name_prefix . 'statuses']   = array();
-        $data[$this->name_prefix . 'statuses'][] = array(
+        $data[$this->name_prefix . 'statuses']   = [];
+        $data[$this->name_prefix . 'statuses'][] = [
             'value' => '1',
             'text'  => $this->language->get('text_enabled'),
-        );
-        $data[$this->name_prefix . 'statuses'][] = array(
+        ];
+        $data[$this->name_prefix . 'statuses'][] = [
             'value' => '0',
             'text'  => $this->language->get('text_disabled'),
-        );
+        ];
 
-        $data[$this->name_prefix . 'autoissues']   = array();
-        $data[$this->name_prefix . 'autoissues'][] = array(
+        $data[$this->name_prefix . 'autoissues']   = [];
+        $data[$this->name_prefix . 'autoissues'][] = [
             'value' => '0',
             'text'  => $this->language->get('text_disabled'),
-        );
-        $data[$this->name_prefix . 'autoissues'][] = array(
+        ];
+        $data[$this->name_prefix . 'autoissues'][] = [
             'value' => '1',
             'text'  => $this->language->get('text_enabled'),
-        );
+        ];
 
         $data['save'] = $this->url->link($this->module_path . $this->separator . 'save', 'user_token=' . $token, $this->url_secure);
         $data['back'] = $this->url->link($this->extension_route, 'user_token=' . $token . '&type=module', $this->url_secure);
 
         // Get the setting
-        $settings = array(
+        $settings = [
             'status',
             'mid',
             'hashkey',
             'hashiv',
             'test_mode',
             'autoissue',
-        );
+        ];
 
         foreach ($settings as $name) {
             $variable_name = $this->name_prefix . '_' . $name;
@@ -180,7 +183,8 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         $this->response->setOutput($this->load->view($this->module_path, $data));
     }
 
-    public function save() {
+    public function save()
+    {
         $json = [];
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -197,11 +201,12 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    private function validate() {
+    private function validate()
+    {
         $this->load->language($this->module_path);
 
         // Premission validate
-        if (!$this->user->hasPermission('modify', $this->module_path)) {
+        if (! $this->user->hasPermission('modify', $this->module_path)) {
             $this->error['error_warning'] = $this->language->get('error_permission');
         }
 
@@ -214,17 +219,18 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
             unset($field_name);
         }
 
-        return !$this->error;
+        return ! $this->error;
     }
 
     // 手動開立發票
-    public function createInvoiceNo() {
+    public function createInvoiceNo()
+    {
 
         $this->load->language('sale/order');
 
-        $json = array();
+        $json = [];
 
-        if (!$this->user->hasPermission('modify', 'sale/order')) {
+        if (! $this->user->hasPermission('modify', 'sale/order')) {
             $json['error'] = $this->language->get('error_permission');
         } elseif (isset($this->request->get['order_id'])) {
 
@@ -239,18 +245,18 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
 
             // 判斷是否啟動ECPAY電子發票開立並且選擇綠界金流
             $invoiceStatus = $this->config->get($this->setting_prefix . 'status');
-            
+
             if ($invoiceStatus == 1 && $paymentMethod[0] == 'ecpaypayment') {
-                // 1.參數初始化
+                                                     // 1.參數初始化
                 define('WEB_MESSAGE_NEW_LINE', '|'); // 前端頁面訊息顯示換行標示語法
 
                 $sMsg   = '';
-                $sMsgP2 = ''; // 金額有差異提醒
+                $sMsgP2 = '';    // 金額有差異提醒
                 $bError = false; // 判斷各參數是否有錯誤，沒有錯誤才可以開發票
 
-                // *訂單資訊
+                                                                                // *訂單資訊
                 $orderProduct = $this->model_sale_order->getProducts($orderId); // 訂購商品
-                $orderTotal   = $this->model_sale_order->getTotals($orderId); // 訂單金額
+                $orderTotal   = $this->model_sale_order->getTotals($orderId);   // 訂單金額
 
                 // *統編與愛心碼資訊
                 $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "invoice_info WHERE order_id = '" . $orderId . "'");
@@ -263,8 +269,8 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                     $invoiceInfo = $query->rows[0];
                 }
 
-                $ecpayinvoiceTestMode = $this->config->get($this->setting_prefix . 'test_mode');	// 測試模式
-                $apiInfo = $this->helper->get_ecpay_invoice_api_info('issue', $ecpayinvoiceTestMode);
+                $ecpayinvoiceTestMode = $this->config->get($this->setting_prefix . 'test_mode'); // 測試模式
+                $apiInfo              = $this->helper->get_ecpay_invoice_api_info('issue', $ecpayinvoiceTestMode);
 
                 // *MID判斷是否有值
                 if ($apiInfo['merchantId'] == '') {
@@ -297,13 +303,13 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                 } else {
                     // 判斷商品是否含小數點
                     foreach ($orderProduct as $key => $value) {
-                        if (!strstr($value['price'], '.00')) {
+                        if (! strstr($value['price'], '.00')) {
                             $sMsgP2 .= (empty($sMsgP2) ? '' : WEB_MESSAGE_NEW_LINE) . '提醒：商品 ' . $value['name'] . ' 金額存在小數點，將以無條件進位開立發票。';
                         }
                     }
                 }
 
-                if (!$bError) {
+                if (! $bError) {
                     $loveCode           = '';
                     $isDonation         = '0';
                     $isPrint            = '0';
@@ -314,63 +320,63 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                     $carrierNum  = '';
 
                     switch ($invoiceInfo['invoice_type']) {
-                    // 個人
-                    case 1:
-                        switch ($invoiceInfo['carrier_type']) {
-                        // 紙本
+                        // 個人
                         case 1:
-                            $carrierType = '';
-                            $isPrint     = '1';
+                            switch ($invoiceInfo['carrier_type']) {
+                                // 紙本
+                                case 1:
+                                    $carrierType = '';
+                                    $isPrint     = '1';
+                                    break;
+                                // 雲端發票
+                                case 2:
+                                    $carrierType = '1';
+                                    break;
+                                // 自然人憑證
+                                case 3:
+                                    $carrierType = '2';
+                                    $carrierNum  = $invoiceInfo['carrier_num'];
+                                    break;
+                                // 手機條碼
+                                case 4:
+                                    $carrierType = '3';
+                                    $carrierNum  = $invoiceInfo['carrier_num'];
+                                    break;
+                                default:
+                                    $carrierType = '';
+                                    $isPrint     = '1';
+                                    break;
+                            }
                             break;
-                        // 雲端發票
+                        // 公司
                         case 2:
-                            $carrierType = '1';
-                            break;
-                        // 自然人憑證
-                        case 3:
-                            $carrierType = '2';
-                            $carrierNum  = $invoiceInfo['carrier_num'];
-                            break;
-                        // 手機條碼
-                        case 4:
-                            $carrierType = '3';
-                            $carrierNum  = $invoiceInfo['carrier_num'];
-                            break;
-                        default:
-                            $carrierType = '';
-                            $isPrint     = '1';
-                            break;
-                        }
-                        break;
-                    // 公司
-                    case 2:
-                        $isPrint            = '1';
-                        $customerIdentifier = $invoiceInfo['company_write'];
-                        $customerName       = ($invoiceInfo['customer_company']) ?: $customerName;
+                            $isPrint            = '1';
+                            $customerIdentifier = $invoiceInfo['company_write'];
+                            $customerName       = ($invoiceInfo['customer_company']) ?: $customerName;
 
-                        switch ($invoiceInfo['carrier_type']) {
-                        // 雲端發票
-                        case 2:
-                            $isPrint     = '0';
-                            $carrierType = '1';
+                            switch ($invoiceInfo['carrier_type']) {
+                                // 雲端發票
+                                case 2:
+                                    $isPrint     = '0';
+                                    $carrierType = '1';
+                                    break;
+                                // 手機條碼
+                                case 4:
+                                    $carrierType = '3';
+                                    $carrierNum  = $invoiceInfo['carrier_num'];
+                                    break;
+                            }
                             break;
-                        // 手機條碼
-                        case 4:
-                            $carrierType = '3';
-                            $carrierNum  = $invoiceInfo['carrier_num'];
+                        // 捐贈
+                        case 3:
+                            $isDonation = '1';
+                            $loveCode   = $invoiceInfo['love_code'];
                             break;
-                        }
-                        break;
-                    // 捐贈
-                    case 3:
-                        $isDonation = '1';
-                        $loveCode   = $invoiceInfo['love_code'];
-                        break;
                     }
 
                     // 4.送出參數
                     try {
-                        // 算出商品各別金額
+                                           // 算出商品各別金額
                         $subTotalReal = 0; // 實際無條進位小計
 
                         foreach ($orderProduct as $key => $value) {
@@ -461,7 +467,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
                             $orderExtend  = $this->db->query('Select * from ' . DB_PREFIX . 'order_extend where order_id=' . $orderId);
                             $creditRemark = ' 信用卡末四碼' . ($orderExtend->row['card_no4']) ?? '';
                         }
-                        
+
                         $factory = new Factory([
                             'hashKey' => $apiInfo['hashKey'],
                             'hashIv'  => $apiInfo['hashIv'],
@@ -508,7 +514,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
 
                     // 5.有錯誤訊息或回傳狀態 RtnCode 不等於1 則不寫入DB
                     $ecpayInvoiceNo = '';
-                    if ($sMsg != '' || !isset($returnInfo['Data']['RtnCode']) || $returnInfo['Data']['RtnCode'] != 1) {
+                    if ($sMsg != '' || ! isset($returnInfo['Data']['RtnCode']) || $returnInfo['Data']['RtnCode'] != 1) {
                         $sMsg .= '綠界科技電子發票手動開立訊息';
                         $sMsg .= (isset($returnInfo)) ? print_r($returnInfo, true) : '';
 
@@ -556,7 +562,8 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
     }
 
     // 訂單頁發票資訊
-    public function orderInvoiceView(&$route, &$data, &$output) {
+    public function orderInvoiceView(&$route, &$data, &$output)
+    {
         // 檢查發票Table 是否存在
         $result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension` WHERE `code` = '" . $this->module_name . "'");
         if ($result->num_rows) {
@@ -574,7 +581,7 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
             $orderId     = $data['order_id'];
             $invoiceInfo = $this->model_extension_ecpay_module_ecpayinvoice->getInvoiceInfo($orderId);
 
-            if ($invoiceStatus == 1 && !empty($invoiceInfo) && $paymentMethod[0] == 'ecpaypayment' && $pos === false) {
+            if ($invoiceStatus == 1 && ! empty($invoiceInfo) && $paymentMethod[0] == 'ecpaypayment' && $pos === false) {
                 // 傳入 view 的資料
                 $data['invoice_type']      = $invoiceInfo['invoice_type'];
                 $data['invoice_type_name'] = $this->helper->invoiceType[$invoiceInfo['invoice_type']];
@@ -595,7 +602,8 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         }
     }
 
-    public function install() {
+    public function install()
+    {
         // EVENT ADD
         $this->load->model($this->module_path);
         $this->load->model('setting/event');
@@ -634,7 +642,8 @@ class EcpayInvoice extends \Opencart\System\Engine\Controller {
         $this->model_extension_ecpay_module_ecpayinvoice->install();
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         $this->load->model($this->module_path);
         $this->load->model('setting/event');
 

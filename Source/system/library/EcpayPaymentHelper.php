@@ -1,5 +1,4 @@
 <?php
-
 namespace Opencart\System\Library;
 
 require_once DIR_EXTENSION . 'ecpay/system/library/ModuleHelper.php';
@@ -10,13 +9,21 @@ class EcpayPaymentHelper extends ModuleHelper
     private $module_name = 'ecpaypayment';
     private $setting_prefix;
 
+    private $registry;
+    private $config;
+    private $load;
+
     /**
      * EcpayPaymentHelper constructor.
      */
-    public function __construct()
+    public function __construct(\Opencart\System\Engine\Registry $registry)
     {
         parent::__construct();
         $this->setting_prefix = 'payment_' . $this->module_name . '_';
+
+        $this->registry = $registry;
+        $this->config   = $registry->get('config'); // 獲取 config 物件
+        $this->load     = $registry->get('load');   // 獲取 load 物件
     }
 
     /**
@@ -74,15 +81,17 @@ class EcpayPaymentHelper extends ModuleHelper
      */
     public function get_ecpay_payment_api_info($action = '', $test_mode = '')
     {
+        $this->load->model('setting/setting');
+
         $api_payment_info = [
-            'action'        => '',
+            'action' => '',
         ];
 
         // URL位置判斷
         if ($test_mode) {
             $api_payment_info['merchantId'] = '3002607';
-            $api_payment_info['hashKey'] = 'pwFHCqoQZGmho4w6';
-            $api_payment_info['hashIv'] = 'EkRm7iFT261dpevs';
+            $api_payment_info['hashKey']    = 'pwFHCqoQZGmho4w6';
+            $api_payment_info['hashIv']     = 'EkRm7iFT261dpevs';
 
             switch ($action) {
                 case 'QueryTradeInfo':
@@ -96,11 +105,10 @@ class EcpayPaymentHelper extends ModuleHelper
                 default:
                     break;
             }
-        }
-        else {
+        } else {
             $api_payment_info['merchantId'] = $this->config->get($this->setting_prefix . 'merchant_id');
-            $api_payment_info['hashKey'] = $this->config->get($this->setting_prefix . 'hash_key');
-            $api_payment_info['hashIv'] = $this->config->get($this->setting_prefix . 'hash_iv');
+            $api_payment_info['hashKey']    = $this->config->get($this->setting_prefix . 'hash_key');
+            $api_payment_info['hashIv']     = $this->config->get($this->setting_prefix . 'hash_iv');
 
             switch ($action) {
                 case 'QueryTradeInfo':
@@ -126,7 +134,7 @@ class EcpayPaymentHelper extends ModuleHelper
      * @param  int    $type     Pattern type　0:payment result, 1:get code result
      * @return string
      */
-    public function getComment($pattern = '', $feedback = array(), $type = 0)
+    public function getComment($pattern = '', $feedback = [], $type = 0)
     {
         // Filter inputs
         $undefinedMessage = 'undefined';
@@ -134,7 +142,7 @@ class EcpayPaymentHelper extends ModuleHelper
             return $undefinedMessage;
         }
 
-        $list = array(
+        $list = [
             'PaymentType',
             'RtnCode',
             'RtnMsg',
@@ -147,7 +155,7 @@ class EcpayPaymentHelper extends ModuleHelper
             'Barcode3',
             'BNPLTradeNo',
             'BNPLInstallment',
-        );
+        ];
         $inputs = $this->only($feedback, $list);
 
         if ($type === 0) {
@@ -159,7 +167,7 @@ class EcpayPaymentHelper extends ModuleHelper
             );
         } elseif ($type === 1) {
             $paymentTypeArray = explode('_', $inputs['PaymentType']);
-            switch($paymentTypeArray[0]) {
+            switch ($paymentTypeArray[0]) {
                 case 'Credit':
                 case 'TWQR':
                 case 'ApplePay':
@@ -244,12 +252,13 @@ class EcpayPaymentHelper extends ModuleHelper
      * @param  string $choose_payment
      * @return string|false
      */
-    public function getSdkPayment ($choose_payment) {
+    public function getSdkPayment($choose_payment)
+    {
         if (empty($choose_payment) === true) {
             return false;
         }
 
-        $sdkPayment = '';
+        $sdkPayment         = '';
         $choosePaymentArray = explode('_', $choose_payment);
         switch ($choosePaymentArray[0]) {
             case 'credit':
