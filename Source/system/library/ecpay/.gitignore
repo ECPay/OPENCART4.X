@@ -1,0 +1,9 @@
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/gw_sdk_payment.iml
+.idea/misc.xml
+/vendor/
+.vscode/
+node_modules/
+composer.lock
