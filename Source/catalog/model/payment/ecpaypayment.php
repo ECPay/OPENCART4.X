@@ -59,10 +59,22 @@ class EcpayPayment extends \Opencart\System\Engine\Model
             $payment_methods = $this->config->get('payment_ecpaypayment_payment_methods');
             if (is_array($payment_methods) && count($payment_methods) > 0) {
                 foreach ($payment_methods as $key => $payment) {
-                    $options[$payment] = [
-                        'code' => $this->module_name . '.' . $payment,
-                        'name' => $this->language->get($this->lang_prefix . 'text_' . $payment),
-                    ];
+                    // ApplePay增加使用者裝置判斷
+                    if ($payment == 'applepay') {
+                        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+                        if (preg_match('/iPhone|iPad|iPod/', $userAgent) === 1) {
+                            $options[$payment] = [
+                                'code' => $this->module_name . '.' . $payment,
+                                'name' => $this->language->get($this->lang_prefix . 'text_' . $payment)
+                            ];
+                        }
+                    }
+                    else {
+                        $options[$payment] = [
+                            'code' => $this->module_name . '.' . $payment,
+                            'name' => $this->language->get($this->lang_prefix . 'text_' . $payment)
+                        ];
+                    }
                 }
 
                 $method_data = [
