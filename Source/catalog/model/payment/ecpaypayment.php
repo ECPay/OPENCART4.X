@@ -89,13 +89,20 @@ class EcpayPayment extends \Opencart\System\Engine\Model
                     $cart_total = $cart_total + (int) $this->session->data['shipping_method']['cost'];
                 }
 
-                // 判斷是否可選無卡分期
-                if ($cart_total < 3000) {
-                    unset($method_data['option']['bnpl']);
+                // 判斷是否可選 ApplePay
+                $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+                if (preg_match('/iPhone|iPad|iPod/', $userAgent) !== 1) {
+                    unset($method_data['option']['applepay']);
                 }
+
                 // 判斷是否可選TWQR
                 if (6 > $cart_total || $cart_total > 49999) {
                     unset($method_data['option']['twqr']);
+                }
+
+                // 判斷是否可選微信支付
+                if (6 > $cart_total || $cart_total > 500000) {
+                    unset($method_data['option']['weixin']);
                 }
 
                 // 判斷是否可選定期定額

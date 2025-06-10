@@ -339,28 +339,48 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
 
             // Check the amounts
             if (round($info['TradeAmt'], 0) == round($order_total, 0)) {
+                // Simulate paid
                 if (($info['SimulatePaid'] ?? '') == 1) {
-                    // Simulate paid
-                    // 定期定額新增訂單 (非第一次回傳)
-                    if (isset($info['PeriodType']) && $info['PeriodType'] != '' && $info['TotalSuccessTimes'] > 1) {
-                        $order_id = $this->create_dca_order($info, $order_id);
+                    // 檢查是否為定期定額
+                    if (isset($info['PeriodType']) && $info['PeriodType'] != '') {
+                        // 定期定額新增訂單 (非第一次回傳)
+                        if ($info['TotalSuccessTimes'] > 1) {
+                            $order_id = $this->create_dca_order($info, $order_id);
+                        }
+
+                        // 增加定期定額付款資訊
+                        $dca_pattern = $this->language->get($this->lang_prefix . 'text_dca_comment');
+                        $comment = $this->helper->getComment($dca_pattern, $info, 1);
+                        $this->model_checkout_order->addHistory($order_id, $status_id, $comment, true, false);
+                        unset($dca_pattern, $comment);
                     }
 
                     $status_id = $order_status_id;
                     $comment   = $this->language->get($this->lang_prefix . 'text_simulate_paid');
                     $this->model_checkout_order->addHistory($order_id, $status_id, $comment, false, false);
                     unset($status_id, $comment);
+
                 } else {
                     // Update the order status
                     switch ($info['RtnCode']) {
                         // Paid
                         case 1:
-                            // 定期定額新增訂單 (非第一次回傳)
-                            if (isset($info['PeriodType']) && $info['PeriodType'] != '' && $info['TotalSuccessTimes'] > 1) {
-                                $order_id = $this->create_dca_order($info, $order_id);
+                            $status_id = $this->config->get($this->setting_prefix . 'success_status');
+                           
+                            // 檢查是否為定期定額
+                            if (isset($info['PeriodType']) && $info['PeriodType'] != '') {
+                                // 定期定額新增訂單 (非第一次回傳)
+                                if ($info['TotalSuccessTimes'] > 1) {
+                                    $order_id = $this->create_dca_order($info, $order_id);
+                                }
+
+                                // 增加定期定額付款資訊
+                                $dca_pattern = $this->language->get($this->lang_prefix . 'text_dca_comment');
+                                $comment = $this->helper->getComment($dca_pattern, $info, 1);
+                                $this->model_checkout_order->addHistory($order_id, $status_id, $comment, true, false);
+                                unset($dca_pattern, $comment);
                             }
 
-                            $status_id = $this->config->get($this->setting_prefix . 'success_status');
                             $pattern   = $this->language->get($this->lang_prefix . 'text_payment_result_comment');
                             $comment   = $this->helper->getComment($pattern, $info);
                             $this->model_checkout_order->addHistory($order_id, $status_id, $comment, true, false);

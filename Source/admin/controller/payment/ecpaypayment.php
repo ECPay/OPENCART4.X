@@ -79,6 +79,7 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
             'text_twqr',
             'text_applepay',
             'text_unionpay',
+            'text_weixin',
 
             'text_dca',
             'entry_dca_period_type',
@@ -278,7 +279,7 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
                     if ($dca_frequency != '1') {
                         $this->error[$this->id_prefix . '-dca-frequency'] = $this->language->get($this->lang_prefix . 'error_dca_frequency_y');
                     }
-                    if ($dca_exec_times < 2 || $dca_exec_times > 9) {
+                    if ($dca_exec_times < 2 || $dca_exec_times > 99) {
                         $this->error[$this->id_prefix . '-dca-exec-times'] = $this->language->get($this->lang_prefix . 'error_dca_exec_times_y');
                     }
                     break;
@@ -286,7 +287,7 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
                     if ($dca_frequency < 1 || $dca_frequency > 12) {
                         $this->error[$this->id_prefix . '-dca-frequency'] = $this->language->get($this->lang_prefix . 'error_dca_frequency_m');
                     }
-                    if ($dca_exec_times < 2 || $dca_exec_times > 99) {
+                    if ($dca_exec_times < 2 || $dca_exec_times > 999) {
                         $this->error[$this->id_prefix . '-dca-exec-times'] = $this->language->get($this->lang_prefix . 'error_dca_exec_times_m');
                     }
                     break;

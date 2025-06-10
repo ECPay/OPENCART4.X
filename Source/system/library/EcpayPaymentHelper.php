@@ -155,6 +155,10 @@ class EcpayPaymentHelper extends ModuleHelper
             'Barcode3',
             'BNPLTradeNo',
             'BNPLInstallment',
+            'PeriodAmount',
+            'PeriodType',
+            'Frequency',
+            'ExecTimes'
         ];
         $inputs = $this->only($feedback, $list);
 
@@ -172,12 +176,27 @@ class EcpayPaymentHelper extends ModuleHelper
                 case 'TWQR':
                 case 'ApplePay':
                 case 'UnionPay':
-                    return sprintf(
-                        $pattern,
-                        $inputs['PaymentType'],
-                        $inputs['RtnCode'],
-                        $inputs['RtnMsg']
-                    );
+                case 'WeiXin':
+                    if (isset($inputs['PeriodType']) && $inputs['PeriodType'] != '') {
+                        return sprintf(
+                            $pattern,
+                            $inputs['RtnCode'],
+                            $inputs['RtnMsg'],
+                            $inputs['PeriodAmount'],
+                            $inputs['PeriodType'],
+                            $inputs['Frequency'],
+                            $inputs['ExecTimes']
+                        );
+                    }
+                    else {
+                        return sprintf(
+                            $pattern,
+                            $inputs['PaymentType'],
+                            $inputs['RtnCode'],
+                            $inputs['RtnMsg']
+                        );
+                    }
+                    
                     break;
                 case 'ATM':
                     return sprintf(
@@ -226,19 +245,6 @@ class EcpayPaymentHelper extends ModuleHelper
                         $inputs['BNPLInstallment']
                     );
                     break;
-                case 'DCA':
-                    return sprintf(
-                        $pattern,
-                        $inputs['PaymentType'],
-                        $inputs['RtnCode'],
-                        $inputs['RtnMsg'],
-                        $inputs['PeriodAmount'],
-                        $inputs['PeriodType'],
-                        $inputs['Frequency'],
-                        $inputs['ExecTimes']
-                    );
-
-                    break;
                 default:
                     break;
             }
@@ -286,6 +292,9 @@ class EcpayPaymentHelper extends ModuleHelper
                 break;
             case 'applepay':
                 $sdkPayment = 'ApplePay';
+                break;
+            case 'weixin':
+                $sdkPayment = 'WeiXin';
                 break;
         }
 

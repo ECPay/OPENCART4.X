@@ -24,6 +24,7 @@ $_['ecpaypayment_text_twqr'] 		      = '歐付寶TWQR';
 $_['ecpaypayment_text_dca'] 		      = '定期定額';
 $_['ecpaypayment_text_applepay']          = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']          = '銀聯卡';
+$_['ecpaypayment_text_weixin']            = '微信支付';
 
 // Entry
 $_['ecpaypayment_entry_status']           = '狀態';
@@ -50,8 +51,8 @@ $_['ecpaypayment_error_hash_iv']          = '[向量] 不可為空！';
 
 // DCA Error
 $_['ecpaypayment_error_dca_frequency_y']  = '當 PeriodType 設為 Y 時，只可設定值為 1 (年)';
-$_['ecpaypayment_error_dca_exec_times_y'] = '當 PeriodType 設為 Y 時，最多可設 9 次';
+$_['ecpaypayment_error_dca_exec_times_y'] = '當 PeriodType 設為 Y 時，執行次數應介於 2-99 次';
 $_['ecpaypayment_error_dca_frequency_m']  = '當 PeriodType 設為 M 時，可設定值為 1~12 (月)';
-$_['ecpaypayment_error_dca_exec_times_m'] = '當 PeriodType 設為 M 時，最多可設 99 次';
+$_['ecpaypayment_error_dca_exec_times_m'] = '當 PeriodType 設為 M 時，執行次數應介於 2-999 次';
 $_['ecpaypayment_error_dca_frequency_d']  = '當 PeriodType 設為 D 時，可設定值為 1~365 (天)';
-$_['ecpaypayment_error_dca_exec_times_d'] = '當 PeriodType 設為 D 時，最多可設 999 次';
+$_['ecpaypayment_error_dca_exec_times_d'] = '當 PeriodType 設為 D 時，執行次數應介於 2-999 次';

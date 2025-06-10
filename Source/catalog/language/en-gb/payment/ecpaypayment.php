@@ -19,6 +19,7 @@ $_['ecpaypayment_text_twqr']                   = 'TWQR';
 $_['ecpaypayment_text_dca']                    = 'DCA';
 $_['ecpaypayment_text_applepay']               = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']               = 'UnionPay';
+$_['ecpaypayment_text_weixin']                 = 'WeiXin';
 
 $_['ecpaypayment_text_item_name']              = 'A Package Of Online Goods';
 $_['ecpaypayment_text_payment_result_comment'] = 'ECPay %s Payment Result : (%s)%s';
@@ -26,6 +27,7 @@ $_['ecpaypayment_text_atm_comment']            = 'Result : (%s)%s, Bank : %s, Vi
 $_['ecpaypayment_text_cvs_comment']            = 'Result : (%s)%s, Trade Code : %s, Payment Deadline : %s';
 $_['ecpaypayment_text_barcode_comment']        = 'Result : (%s)%s, Deadline : %s, BARCODE 1 : %s, BARCODE 2 : %s, BARCODE 3 : %s';
 $_['ecpaypayment_text_bnpl_comment']           = 'Result : (%s)%s, BNPL Trade No : %s, BNPL Installment : %s';
+$_['ecpaypayment_text_dca_comment']            = 'Payment Info : (%s)%s, DCA PeriodAmount ：%s, DCA PeriodType ：%s, DCA Frequency ：%s, DCA ExecTimes ：%s';
 $_['ecpaypayment_text_failure_comment']        = 'Paid Failed, Error : %s';
 $_['ecpaypayment_text_state_error']            = 'The order state is error, stop updating state';
 $_['ecpaypayment_text_simulate_paid']          = 'Simulate paid, update the note only';

@@ -1,5 +1,24 @@
 CHANGELOG
 =========
+## 1.3.2506020 - 2025-06-02
+-----
+### Added
+- Add the payment aio `CreditCardPeriodAction API` example.
+
+## 1.3.2411270 - 2024-11-27
+-----
+### Added
+- Add Logistic Status Code Files.
+### Changed
+- Change AIO test integration account.
+### Deprecated
+- Remove Sample Code CreateOrderIssueInvoice.php
+
+## 1.3.2411050 - 2024-11-05
+-----
+### Added
+- Add the domestic logistic `GetStoreList API` example.
+
 ## 1.3.2408190 - 2024-08-19
 -----
 ### Added

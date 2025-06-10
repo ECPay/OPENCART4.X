@@ -24,6 +24,7 @@ $_['ecpaypayment_text_twqr']              = 'TWQR';
 $_['ecpaypayment_text_dca']               = 'DCA';
 $_['ecpaypayment_text_applepay']          = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']          = 'UnionPay';
+$_['ecpaypayment_text_weixin']            = 'WeiXin';
 
 // Entry
 $_['ecpaypayment_entry_status']           = 'Status';
@@ -50,8 +51,8 @@ $_['ecpaypayment_error_hash_iv']          = 'Hash IV Required!';
 
 // DCA Error
 $_['ecpaypayment_error_dca_frequency_y']  = 'When PeriodType is set to Y, only the value 1 (year) can be set.';
-$_['ecpaypayment_error_dca_exec_times_y'] = 'When PeriodType is set to Y, it can be set up to 9 times.';
+$_['ecpaypayment_error_dca_exec_times_y'] = 'When PeriodType is set to Y, the value must be between 2 and 99 times.';
 $_['ecpaypayment_error_dca_frequency_m']  = 'When PeriodType is set to M, the value that can be set is 1~12 (months).';
-$_['ecpaypayment_error_dca_exec_times_m'] = 'When PeriodType is set to M, it can be set up to 99 times.';
+$_['ecpaypayment_error_dca_exec_times_m'] = 'When PeriodType is set to M, the value must be between 2 and 999 times.';
 $_['ecpaypayment_error_dca_frequency_d']  = 'When PeriodType is set to D, the value can be set from 1 to 365 (days).';
-$_['ecpaypayment_error_dca_exec_times_d'] = 'When PeriodType is set to D, it can be set up to 999 times.';
+$_['ecpaypayment_error_dca_exec_times_d'] = 'When PeriodType is set to D, the value must be between 2 and 999 times.';
