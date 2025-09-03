@@ -198,6 +198,9 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
         $dataBase64Encode = $this->sessionEncrypt($sessionId);
 
         $al_iscollection = 'N';
+		if (strpos($logisticSubType[1], "_collection") !== false) {
+			$al_iscollection = 'Y';
+		}
         $al_srvreply     = $this->url->link($this->ecpay_logistic_module_path . $this->separator . 'response_map&sid=' . $dataBase64Encode, '', $this->url_secure);
 
         try {
@@ -387,6 +390,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
             'ecpaylogistic.fami_collection',
             'ecpaylogistic.hilife_collection',
             'ecpaylogistic.okmart_collection',
+            'ecpaylogistic.tcat_collection',
             'ecpaylogistic.unimart',
             'ecpaylogistic.fami',
             'ecpaylogistic.hilife',
@@ -415,7 +419,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
                         if ($payment_method['code'] != 'ecpaypayment') {
                             unset($payment_methods[$key]);
                         } else {
-                            // 判斷是否為超商取貨付款
+                            // 判斷是否為取貨付款
                             if (stripos($this->session->data['shipping_method']['code'], 'collection')) {
                                 // 排除其他付款方式
                                 foreach ($payment_method['option'] as $method_key => $ecpay_method) {
@@ -455,7 +459,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller {
     public function sessionDecrypt($data) {
         $ecpaylogisticSetting = $this->get_logistic_settings();
         $apiLogisticInfo = $this->helper->get_ecpay_logistic_api_info('', '', $ecpaylogisticSetting);
-        
+
         $dataBase64Decode = $this->base64Decode($data);
         $dataAesDecrypt   = $this->aesDecrypt($dataBase64Decode, $apiLogisticInfo['hashKey'], $apiLogisticInfo['hashIv']);
         $sessionId        = $this->urlDecode($dataAesDecrypt);

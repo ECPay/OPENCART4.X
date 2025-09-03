@@ -250,6 +250,7 @@ class EcpayLogisticHelper extends ModuleHelper
     {
         return [
             'tcat',
+            'tcat_collection',
             'post',
         ];
     }

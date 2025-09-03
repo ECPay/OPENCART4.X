@@ -29,7 +29,7 @@
         {% endif %}
         <div class="card">
             <div class="card-header">
-                <i class="fa fa-pencil"></i> 
+                <i class="fa fa-pencil"></i>
                 {{ text_edit }}
             </div>
 
@@ -61,6 +61,8 @@
                                 <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-post" aria-expanded="false" aria-controls="tab-post">{{ text_post }}</button>
                                 <!--黑貓物流-->
                                 <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-tcat" aria-expanded="false" aria-controls="tab-tcat">{{ text_tcat }}</button>
+                                <!--黑貓物流取貨付款-->
+                                <button class="btn btn-light mb-2 w-100" type="button" data-bs-toggle="collapse" data-bs-target="#tab-tcat-collection" aria-expanded="false" aria-controls="tab-tcat-collection">{{ text_tcat_collection }}</button>
                             </p>
                         </div>
                         <div id="content-group" class="col-sm-10">
@@ -253,7 +255,7 @@
                                             <div id="error-shipping-ecpaylogistic-geo-zone-id" class="invalid-feedback"></div>
                                         </div>
                                     </div>
-                                    <!--Order Status-->   
+                                    <!--Order Status-->
                                     <div class="row mb-3 required">
                                         <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-order-status">
                                             <span data-toggle="tooltip" title="{{ entry_order_status }}">
@@ -627,6 +629,38 @@
                                         <div class="col-sm-10">
                                             <input type="text" name="shipping_ecpaylogistic_tcat_fee" value="{{ shipping_ecpaylogistic_tcat_fee }}" placeholder="{{ entry_TCAT_fee }}" id="input-shipping-ecpaylogistic-tcat-fee" class="form-control" />
                                             <div id="error-shipping-ecpaylogistic-tcat-fee" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--黑貓宅配取貨付款-->
+                            <div class="row">
+                                <div class="collapse multi-collapse" data-bs-parent="#content-group" id="tab-tcat-collection">
+                                    <!--Status-->
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="input-ecpaylogistic-tcat-collection-status">
+                                            <span data-toggle="tooltip" title="{{ entry_status }}">
+                                                {{ entry_status }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="form-check form-switch form-switch-lg">
+                                                <input type="hidden" name="shipping_ecpaylogistic_tcat_collection_status" value="0"/>
+                                                <input type="checkbox" name="shipping_ecpaylogistic_tcat_collection_status" value="1" id="input-status" class="form-check-input" {% if shipping_ecpaylogistic_tcat_collection_status %} checked {% endif %}/>
+                                            </div>
+                                            <div id="error-ecpaylogistic-tcat-collection-status" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                    <!--Fee-->
+                                    <div class="row mb-3 required">
+                                        <label class="col-sm-2 col-form-label" for="input-shipping-ecpaylogistic-tcat-collection-fee">
+                                            <span data-toggle="tooltip" title="{{ entry_TCAT_Collection_fee }}">
+                                                {{ entry_TCAT_Collection_fee }}
+                                            </span>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="shipping_ecpaylogistic_tcat_collection_fee" value="{{ shipping_ecpaylogistic_tcat_collection_fee }}" placeholder="{{ entry_TCAT_Collection_fee }}" id="input-shipping-ecpaylogistic-tcat-collection-fee" class="form-control" />
+                                            <div id="error-shipping-ecpaylogistic-tcat-collection-fee" class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                 </div>

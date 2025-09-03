@@ -116,6 +116,7 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
                 'ecpaylogistic.fami_collection',
                 'ecpaylogistic.hilife_collection',
                 'ecpaylogistic.okmart_collection',
+                'ecpaylogistic.tcat_collection',
                 'ecpaylogistic.unimart',
                 'ecpaylogistic.fami',
                 'ecpaylogistic.hilife',
@@ -154,13 +155,17 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
             $json['error'] = $this->language->get('error_order');
         }
 
-        if (! isset($this->session->data['payment_method']) || $this->session->data['payment_method']['code'] != $this->module_name . '.credit') {
+        $payment_methods = $this->config->get($this->setting_prefix . 'payment_methods');
+        $choose_payment_array = explode('.', $this->session->data['payment_method']['code']);
+        if (! isset($this->session->data['payment_method']) || !in_array($choose_payment_array[1], $payment_methods)) {
             $json['error'] = $this->language->get('error_payment_method');
 
         }
         if (! $json) {
             $this->load->model('checkout/order');
-            $this->model_checkout_order->addHistory($this->session->data['order_id'], $this->config->get($this->setting_prefix . 'order_status_id'));
+            $status_id = $this->config->get($this->setting_prefix . 'create_status');
+            $this->model_checkout_order->addHistory($this->session->data['order_id'], $status_id);
+
             $json['redirect'] = $this->url->link('checkout/success', 'language=' . $this->config->get('config_language'), true);
         }
 
@@ -294,6 +299,9 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
                 }
                 $input = $this->helper->add_type_info($input, $choose_payment_array[1]);
 
+                // 紀錄綠界付款資訊
+                $result = $this->helper->insertEcpayResponsePaymentInfo($order_id, $choose_payment_array[1], $input['MerchantTradeNo'], 0);
+
                 $generateForm = $autoSubmitFormService->generate($input, $apiPaymentInfo['action']);
                 echo $generateForm;
             } else {
@@ -337,48 +345,75 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
             $order_status_id = $order['order_status_id'];
             $order_total     = $order['total'];
 
+            // 取出金額參數
+            $TradeAmt = 0;
+            if (isset($info['Amount'])) {
+                // 定期定額付款結果時 Amount 會有值
+                $TradeAmt = $info['Amount'];
+            } else if (isset($info['TradeAmt'])) {
+                // 其他付款結果時 TradeAmt 會有值
+                $TradeAmt = $info['TradeAmt'];
+            }
+
             // Check the amounts
-            if (round($info['TradeAmt'], 0) == round($order_total, 0)) {
-                // Simulate paid
+            if (round($TradeAmt, 0) == round($order_total, 0)) {
                 if (($info['SimulatePaid'] ?? '') == 1) {
-                    // 檢查是否為定期定額
-                    if (isset($info['PeriodType']) && $info['PeriodType'] != '') {
-                        // 定期定額新增訂單 (非第一次回傳)
-                        if ($info['TotalSuccessTimes'] > 1) {
-                            $order_id = $this->create_dca_order($info, $order_id);
-                        }
-
-                        // 增加定期定額付款資訊
-                        $dca_pattern = $this->language->get($this->lang_prefix . 'text_dca_comment');
-                        $comment = $this->helper->getComment($dca_pattern, $info, 1);
-                        $this->model_checkout_order->addHistory($order_id, $status_id, $comment, true, false);
-                        unset($dca_pattern, $comment);
-                    }
-
+                    // 模擬付款 僅執行備註寫入
                     $status_id = $order_status_id;
                     $comment   = $this->language->get($this->lang_prefix . 'text_simulate_paid');
                     $this->model_checkout_order->addHistory($order_id, $status_id, $comment, false, false);
                     unset($status_id, $comment);
 
                 } else {
+                    // 計算定期定額付款結果回傳交易成功最大次數
+                    $max_success_times = $this->helper->checkDcaMaxTotalSuccessTimes($info['MerchantTradeNo']);
+
+                    // 將綠界回傳付款結果存至 DB
+                    $this->helper->updateEcpayResponsePaymentInfo($order_id, $info);
+
                     // Update the order status
                     switch ($info['RtnCode']) {
                         // Paid
                         case 1:
                             $status_id = $this->config->get($this->setting_prefix . 'success_status');
-                           
+
                             // 檢查是否為定期定額
                             if (isset($info['PeriodType']) && $info['PeriodType'] != '') {
-                                // 定期定額新增訂單 (非第一次回傳)
-                                if ($info['TotalSuccessTimes'] > 1) {
-                                    $order_id = $this->create_dca_order($info, $order_id);
-                                }
 
-                                // 增加定期定額付款資訊
-                                $dca_pattern = $this->language->get($this->lang_prefix . 'text_dca_comment');
-                                $comment = $this->helper->getComment($dca_pattern, $info, 1);
-                                $this->model_checkout_order->addHistory($order_id, $status_id, $comment, true, false);
-                                unset($dca_pattern, $comment);
+                                // 確認訂單狀態存在
+                                $is_exist = $this->helper->isEcpayPaymentResponseInfoExist($order_id, $info['MerchantTradeNo']);
+                                if ($is_exist) {
+                                    $dca_success_comment = '綠界定期定額訂單第' .$info['TotalSuccessTimes']. '次付款結果回傳';
+
+                                    // 確認定期定額訂單最後交易成功次數
+                                    if ($max_success_times == 0 && $info['TotalSuccessTimes'] == 1) {
+                                        // 第一次
+                                        $dca_success_comment .= '(Master)';
+                                    }
+                                    else {
+                                        // 非第一次
+                                        // 判斷是否已接收過定期定額付款結果，若重複則不處理
+                                        if ($max_success_times < $info['TotalSuccessTimes']) {
+                                            $order_id = $this->create_dca_order($info, $order_id);
+                                        }
+                                    }
+
+                                    // 增加定期定額分期資訊
+                                    $dca_pattern = $this->language->get($this->lang_prefix . 'text_dca_comment');
+                                    $comment = $this->helper->getComment($dca_pattern, $info, 1);
+                                    $this->model_checkout_order->addHistory($order_id, $status_id, $comment, false, false);
+                                    unset($dca_pattern, $comment);
+
+                                    // 增加定期定額成功次數資訊
+                                    $this->model_checkout_order->addHistory($order_id, $status_id, $dca_success_comment, false, false);
+
+                                }
+                                else {
+                                    // (新舊版外掛相容)若為舊版訂單後續付款 response 將會查無原始訂單，直接寫入資料
+                                    $order = $this->model_checkout_order->getOrder($_GET['order_id']);
+                                    $payment_method = explode('.', $order['payment_method']['code']);
+                                    $result = $this->helper->insertEcpayResponsePaymentInfo($order_id, $payment_method[1], $info['MerchantTradeNo'], 1);
+                                }
                             }
 
                             $pattern   = $this->language->get($this->lang_prefix . 'text_payment_result_comment');
@@ -554,6 +589,16 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
 
             // 儲存成新訂單
             $new_order_id = $this->model_checkout_order->addOrder($new_order_data);
+
+            // 處理發票資訊
+            $query_old_invoice = $this->db->query("SELECT * FROM " . DB_PREFIX . "invoice_info WHERE order_id = '" . (int) $order_id . "'");
+            $query_new_invoice = $this->db->query("SELECT * FROM " . DB_PREFIX . "invoice_info WHERE order_id = '" . (int) $new_order_id . "'");
+            if ($query_old_invoice->num_rows > 0 && $query_new_invoice->num_rows == 0) {
+                $order_invoice = $query_old_invoice->rows[0];
+
+                // 新訂單新增發票資訊
+                $this->db->query("INSERT INTO `" . DB_PREFIX . "invoice_info` (`order_id`, `love_code`, `company_write`, `customer_company`, `invoice_type`, `carrier_type`, `carrier_num`, `createdate`) VALUES ('" . $new_order_id . "', '" . $this->db->escape($order_invoice['love_code']) . "', '" . $this->db->escape($order_invoice['company_write']) . "', '" . $this->db->escape($order_invoice['customer_company']) . "', '" . $this->db->escape($order_invoice['invoice_type']) . "', '" . $this->db->escape($order_invoice['carrier_type']) . "', '" . $this->db->escape($order_invoice['carrier_num']) . "', '" . time() . "' )");
+            }
 
             // 新訂單新增歷程
             $this->model_checkout_order->addHistory($new_order_id, $order_info['order_status_id'], '定期定額付款第' . $info['TotalSuccessTimes'] . '次繳費成功，原始訂單編號: ' . $order_id, false);

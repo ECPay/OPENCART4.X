@@ -101,6 +101,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 		$data['entry_FAMI_Collection_fee'] = $this->language->get('entry_FAMI_Collection_fee');
 		$data['entry_HILIFE_Collection_fee'] = $this->language->get('entry_HILIFE_Collection_fee');
 		$data['entry_OKMART_Collection_fee'] = $this->language->get('entry_OKMART_Collection_fee');
+        $data['entry_TCAT_Collection_fee'] = $this->language->get('entry_TCAT_Collection_fee');
 		$data['entry_UNIMART_fee'] = $this->language->get('entry_UNIMART_fee');
 		$data['entry_FAMI_fee'] = $this->language->get('entry_FAMI_fee');
 		$data['entry_HILIFE_fee'] = $this->language->get('entry_HILIFE_fee');
@@ -126,6 +127,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 			'FAMI_Collection_fee',
 			'HILIFE_Collection_fee',
 			'OKMART_Collection_fee',
+            'TCAT_Collection_fee',
 			'FreeShippingAmount',
 			'MinAmount',
 			'MaxAmount',
@@ -210,6 +212,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 			'fami_collection_fee',
 			'hilife_collection_fee',
 			'okmart_collection_fee',
+			'tcat_collection_fee',
 			'unimart_fee',
 			'fami_fee',
 			'hilife_fee',
@@ -229,6 +232,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 			'fami_collection_status',
 			'hilife_collection_status',
 			'okmart_collection_status',
+			'tcat_collection_status',
 			'geo_zone_id',
 			'status',
 			'free_shipping_amount',
@@ -266,6 +270,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 				'fami_collection',
 				'hilife_collection',
 				'okmart_collection',
+				'tcat_collection',
 				'fami',
 				'unimart',
 				'hilife',
@@ -349,6 +354,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 			'fami_collection' => 'FAMI_Collection',
 			'hilife_collection' => 'HILIFE_Collection',
 			'okmart_collection' => 'OKMART_Collection',
+			'tcat_collection' => 'TCAT_Collection',
 			'fami' => 'FAMI',
 			'unimart' => 'UNIMART',
 			'hilife' => 'HILIFE',
@@ -430,6 +436,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
                         'okmart_collection' => 'OKMARTC2C',
 						'post' => 'POST',
 						'tcat' => 'TCAT',
+						'tcat_collection' => 'TCAT',
 					];
 				}
 				else {
@@ -442,6 +449,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 						'hilife_collection' => 'HILIFE',
 						'post' => 'POST',
 						'tcat' => 'TCAT',
+						'tcat_collection' => 'TCAT',
 					];
 				}
 
@@ -542,6 +550,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
                         'Specification' => '0001',
                         'ScheduledPickupTime' => '4',
                         'ScheduledDeliveryTime' => '4',
+                        'IsCollection' => $_IsCollection,
                         'ServerReplyURL' => $server_reply_url,
                         'Remark' => 'ecpay_module_opencart',
                     );
@@ -663,7 +672,7 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 				// 建立物流訂單按鈕
 				$data['shipping_method'] .= '<a href="' . $create_shipping_order_url . '" id="ecpaylogistic" class="btn btn-primary btn-xs mx-2">建立物流訂單</a>';
 
-				if ($logisticSubType !== 'post' && $logisticSubType !== 'tcat') {
+				if ($logisticSubType !== 'post' && $logisticSubType !== 'tcat' && $logisticSubType !== 'tcat_collection') {
 					// 變更門市按鈕
 					$map_form = $this->express_map($data['order_id']);
 					$data['shipping_method'] .= '<input type="button" onclick="changeStore()" class="btn btn-primary btn-xs mx-2" value="變更門市" />' . $map_form . '<script>function changeStore() {
@@ -806,6 +815,9 @@ class EcpayLogistic extends \Opencart\System\Engine\Controller
 		}
 
 		$al_iscollection = 'N';
+		if (strpos($logisticSubType[1], "_collection") !== false) {
+			$al_iscollection = 'Y';
+		}
 
 		// 因 samesite 問題，走前台 API
 		$factory = new Factory([

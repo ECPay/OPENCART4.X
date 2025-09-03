@@ -62,6 +62,11 @@ class EcpayLogistic extends \Opencart\System\Engine\Model {
 		if ($this->cart->getSubTotal() > 20000) {
 			$cvsStatus = false;
 		}
+		// 黑貓取貨付款金額範圍1~20000元
+		$tcatCollectionStatus = true;
+		if ($this->cart->getSubTotal() > 20000) {
+			$tcatCollectionStatus = false;
+		}
 		// 免運費金額
 		$isFreeShipping = false;
 		if ($this->cart->getSubTotal() >= $ecpaylogisticSetting[$this->setting_prefix . 'free_shipping_amount']) {
@@ -219,6 +224,19 @@ class EcpayLogistic extends \Opencart\System\Engine\Model {
 						'text'         => $quote_text,
 				);
 				$Extra['last_ecpaylogistic_shipping_code'] = 'tcat';
+            }
+
+			if ($ecpaylogisticSetting[$this->setting_prefix . 'tcat_collection_status'] && $tcatCollectionStatus) {
+				$shipping_cost = ($isFreeShipping) ? 0 : $ecpaylogisticSetting[$this->setting_prefix . 'tcat_collection_fee'];
+				$quote_text = $this->currency->format($shipping_cost, $this->session->data['currency']);
+				$quote_data['tcat_collection'] = array(
+						'code'         => 'ecpaylogistic.tcat_collection',
+						'name'        => $this->language->get('text_tcat_collection'),
+						'cost'         => $shipping_cost,
+						'tax_class_id' => 0,
+						'text'         => $quote_text,
+				);
+				$Extra['last_ecpaylogistic_shipping_code'] = 'tcat_collection';
             }
 
 			unset($quote_text);
