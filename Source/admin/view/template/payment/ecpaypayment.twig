@@ -283,6 +283,17 @@
                             <label class="form-label" for="input-{{ id_prefix }}-payment-methods">
                                 &nbsp;{{ text_weixin }}
                             </label>
+
+                            <br />
+
+                            {% if payment_methods.Jkopay is defined %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[Jkopay]" value="jkopay" checked="checked" />
+                            {% else %}
+                                <input class="form-check-input" type="checkbox" name="{{ name_prefix }}_payment_methods[Jkopay]" value="jkopay" />
+                            {% endif %}
+                            <label class="form-label" for="input-{{ id_prefix }}-payment-methods">
+                                &nbsp;{{ text_jkopay }}
+                            </label>
                         </div>
                     </div>
 

@@ -25,6 +25,7 @@ $_['ecpaypayment_text_dca'] 		      = '定期定額';
 $_['ecpaypayment_text_applepay']          = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']          = '銀聯卡';
 $_['ecpaypayment_text_weixin']            = '微信支付';
+$_['ecpaypayment_text_jkopay']            = '街口支付';
 
 // Entry
 $_['ecpaypayment_entry_status']           = '狀態';

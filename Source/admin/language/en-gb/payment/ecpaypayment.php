@@ -25,6 +25,7 @@ $_['ecpaypayment_text_dca']               = 'DCA';
 $_['ecpaypayment_text_applepay']          = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']          = 'UnionPay';
 $_['ecpaypayment_text_weixin']            = 'WeiXin';
+$_['ecpaypayment_text_jkopay']            = 'Jkopay';
 
 // Entry
 $_['ecpaypayment_entry_status']           = 'Status';

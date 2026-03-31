@@ -290,6 +290,12 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
                     'NeedExtraPaidInfo' => 'Y',
                 ];
 
+                // 街口另外處理選擇付款方式
+                if ($sdkPayment == 'Jkopay') {
+                    $input['ChoosePayment'] = 'DigitalPayment';
+                    $input['ChooseSubPayment'] = $sdkPayment;
+                }
+
                 // 取得額外參數
                 if ($choose_payment_array[1] == 'dca') {
                     $input['PeriodReturnURL'] = $this->url->link($this->module_path . '|response', '', true);

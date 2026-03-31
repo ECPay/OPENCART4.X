@@ -56,7 +56,7 @@ class Ecpaypayment extends \Opencart\System\Engine\Model {
             `TradeNo`              VARCHAR(20)   NULL,
             `TradeAmt`             INT(10)       NULL,
             `PaymentDate`          VARCHAR(20)   NULL,
-            `PaymentType`          VARCHAR(20)   NULL,
+            `PaymentType`          VARCHAR(50)   NULL,
             `PaymentTypeChargeFee` INT(10)       NULL,
             `PlatformID`           VARCHAR(20)   NULL,
             `TradeDate`            VARCHAR(20)   NULL,

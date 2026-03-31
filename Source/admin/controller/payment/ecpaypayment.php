@@ -80,6 +80,7 @@ class EcpayPayment extends \Opencart\System\Engine\Controller {
             'text_applepay',
             'text_unionpay',
             'text_weixin',
+            'text_jkopay',
 
             'text_dca',
             'entry_dca_period_type',

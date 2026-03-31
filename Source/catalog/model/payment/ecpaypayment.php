@@ -105,6 +105,11 @@ class EcpayPayment extends \Opencart\System\Engine\Model
                     unset($method_data['option']['weixin']);
                 }
 
+                // 判斷是否可選街口支付
+                if (0 > $cart_total || $cart_total > 199999) {
+                    unset($method_data['option']['jkopay']);
+                }
+
                 // 判斷是否可選定期定額
                 $dca_period_type = $this->config->get($this->setting_prefix . 'dca_period_type');
                 $dca_frequency   = $this->config->get($this->setting_prefix . 'dca_frequency');

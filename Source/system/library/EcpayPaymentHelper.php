@@ -8,10 +8,12 @@ class EcpayPaymentHelper extends ModuleHelper
 {
     private $module_name = 'ecpaypayment';
     private $setting_prefix;
+    private $lang_prefix;
 
     private $registry;
     private $config;
     private $load;
+    private $language;
     protected $db;
     protected $model_checkout_order;
 
@@ -22,10 +24,12 @@ class EcpayPaymentHelper extends ModuleHelper
     {
         parent::__construct();
         $this->setting_prefix = 'payment_' . $this->module_name . '_';
+        $this->lang_prefix = $this->module_name . '_';
 
         $this->registry = $registry;
-        $this->config   = $registry->get('config'); // 獲取 config 物件
-        $this->load     = $registry->get('load');   // 獲取 load 物件
+        $this->config   = $registry->get('config');   // 獲取 config 物件
+        $this->load     = $registry->get('load');     // 獲取 load 物件
+        $this->language = $registry->get('language'); // 獲取 language 物件
 
         $this->db = $registry->get('db');
         $this->registry->get('load')->model('checkout/order');
@@ -183,6 +187,7 @@ class EcpayPaymentHelper extends ModuleHelper
                 case 'ApplePay':
                 case 'UnionPay':
                 case 'WeiXin':
+                case 'Jkopay':
                     if (isset($inputs['PeriodType']) && $inputs['PeriodType'] != '') {
                         return sprintf(
                             $pattern,
@@ -202,7 +207,7 @@ class EcpayPaymentHelper extends ModuleHelper
                             $inputs['RtnMsg']
                         );
                     }
-                    
+
                     break;
                 case 'ATM':
                     return sprintf(
@@ -248,7 +253,8 @@ class EcpayPaymentHelper extends ModuleHelper
                         $inputs['RtnCode'],
                         $inputs['RtnMsg'],
                         $inputs['BNPLTradeNo'],
-                        $inputs['BNPLInstallment']
+                        $inputs['BNPLInstallment'],
+                        $this->language->get($this->lang_prefix . 'text_' . strtolower($inputs['PaymentType']))
                     );
                     break;
                 default:
@@ -301,6 +307,9 @@ class EcpayPaymentHelper extends ModuleHelper
                 break;
             case 'weixin':
                 $sdkPayment = 'WeiXin';
+                break;
+            case 'jkopay':
+                $sdkPayment = 'Jkopay';
                 break;
         }
 
@@ -362,7 +371,7 @@ class EcpayPaymentHelper extends ModuleHelper
             if (empty($order_id) === true || empty($response_info) === true) {
                 return false;
             }
-    
+
             // 模擬付款不更新付款狀態
             if (isset($response_info['SimulatePaid']) && $response_info['SimulatePaid'] == 0) {
                 $fields = [

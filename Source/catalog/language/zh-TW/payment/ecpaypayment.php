@@ -15,18 +15,21 @@ $_['ecpaypayment_text_cvs']                    = '超商代碼';
 $_['ecpaypayment_text_barcode']                = '超商條碼';
 $_['ecpaypayment_text_cod']                    = '貨到付款';
 $_['ecpaypayment_text_bnpl']                   = '無卡分期';
+$_['ecpaypayment_text_bnpl_urich']             = '裕富數位無卡分期';
+$_['ecpaypayment_text_bnpl_zingala']           = '中租銀角零卡';
 $_['ecpaypayment_text_twqr']                   = '歐付寶TWQR';
 $_['ecpaypayment_text_dca']                    = '定期定額';
 $_['ecpaypayment_text_applepay']               = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']               = '銀聯卡';
 $_['ecpaypayment_text_weixin']                 = '微信支付';
+$_['ecpaypayment_text_jkopay']                 = '街口支付';
 
 $_['ecpaypayment_text_item_name']              = '網路商品一批';
 $_['ecpaypayment_text_payment_result_comment'] = '綠界%s付款結果：(%s)%s';
 $_['ecpaypayment_text_atm_comment']            = '取號結果：(%s)%s，銀行代碼：%s，虛擬帳號：%s，付款截止日：%s';
 $_['ecpaypayment_text_cvs_comment']            = '取號結果：(%s)%s，繳費代碼：%s，付款截止日：%s';
 $_['ecpaypayment_text_barcode_comment']        = '取號結果：(%s)%s，付款截止日：%s，第1段條碼號碼：%s，第2段條碼號碼：%s，第3段條碼號碼：%s';
-$_['ecpaypayment_text_bnpl_comment']           = '申請結果：(%s)%s，申請交易編號：%s，分期期數：%s';
+$_['ecpaypayment_text_bnpl_comment']           = '申請結果：(%s)%s，申請交易編號：%s，分期期數：%s，無卡分期服務商：%s';
 $_['ecpaypayment_text_dca_comment']            = '定期定額資訊：(%s)%s，分期金額：%s，分期週期種類：%s，分期執行頻率：%s，分
 期執行次數：%s';
 
