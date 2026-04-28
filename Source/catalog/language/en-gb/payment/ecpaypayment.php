@@ -23,6 +23,7 @@ $_['ecpaypayment_text_applepay']               = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']               = 'UnionPay';
 $_['ecpaypayment_text_weixin']                 = 'WeiXin';
 $_['ecpaypayment_text_jkopay']                 = 'Jkopay';
+$_['ecpaypayment_text_ipassmoney']             = 'iPass MONEY';
 
 $_['ecpaypayment_text_item_name']              = 'A Package Of Online Goods';
 $_['ecpaypayment_text_payment_result_comment'] = 'ECPay %s Payment Result : (%s)%s';

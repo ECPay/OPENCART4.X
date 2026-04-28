@@ -290,8 +290,8 @@ class Ecpaypayment extends \Opencart\System\Engine\Controller
                     'NeedExtraPaidInfo' => 'Y',
                 ];
 
-                // 街口另外處理選擇付款方式
-                if ($sdkPayment == 'Jkopay') {
+                // 街口、iPASS MONEY另外處理選擇付款方式
+                if ($sdkPayment == 'Jkopay' || $sdkPayment == 'iPASS') {
                     $input['ChoosePayment'] = 'DigitalPayment';
                     $input['ChooseSubPayment'] = $sdkPayment;
                 }

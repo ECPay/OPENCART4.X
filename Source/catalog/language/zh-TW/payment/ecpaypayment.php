@@ -23,6 +23,7 @@ $_['ecpaypayment_text_applepay']               = 'Apple Pay';
 $_['ecpaypayment_text_unionpay']               = '銀聯卡';
 $_['ecpaypayment_text_weixin']                 = '微信支付';
 $_['ecpaypayment_text_jkopay']                 = '街口支付';
+$_['ecpaypayment_text_ipassmoney']             = '綠界iPASS MONEY';
 
 $_['ecpaypayment_text_item_name']              = '網路商品一批';
 $_['ecpaypayment_text_payment_result_comment'] = '綠界%s付款結果：(%s)%s';

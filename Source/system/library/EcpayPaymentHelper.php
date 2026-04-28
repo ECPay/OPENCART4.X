@@ -188,6 +188,7 @@ class EcpayPaymentHelper extends ModuleHelper
                 case 'UnionPay':
                 case 'WeiXin':
                 case 'Jkopay':
+                case 'iPASS':
                     if (isset($inputs['PeriodType']) && $inputs['PeriodType'] != '') {
                         return sprintf(
                             $pattern,
@@ -310,6 +311,9 @@ class EcpayPaymentHelper extends ModuleHelper
                 break;
             case 'jkopay':
                 $sdkPayment = 'Jkopay';
+                break;
+            case 'ipassmoney':
+                $sdkPayment = 'iPASS';
                 break;
         }
 
