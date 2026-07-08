@@ -22,7 +22,7 @@
 -----------------
 | OpenCart    | PHP         |
 | :---------: | :---------: |
-|  4.0.2.3    | 8.2         |
+|  4.0.2.3    | 8.4         |
 
 安裝
 -----------------
@@ -134,6 +134,9 @@ https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id
 
 Changelog
 -----------------
+
+4.0.2606260
+- 支援 PHP 8.4
 
 4.0.2604200
 - 增加綠界iPASS MONEY付款方式
